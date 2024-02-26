@@ -14,3 +14,11 @@
 
 ## Dokumentacija
 Nepadaryta
+
+## TODO
+- [ ] Pabaigti klasių diagramą
+- [ ] Implementuoti Cart klasę ir atkomentuoti Customer, Manager
+- [ ] Implementuoti Comment klasę
+- [ ] Implementuoti Product klasę
+- [ ] Implementuoti Warehouse klasę
+- [ ] Implementuoti Liquid, HairDye ir Tool klases
