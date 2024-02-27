@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.webshoppt.fxcontrollers.MainWindow">
+   <children>
+      <TabPane prefHeight="800.0" prefWidth="1280.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Shop">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="291.0" />
+            </content>
+          </Tab>
+          <Tab fx:id="productsTab" text="Products">
+            <content>
+              <AnchorPane fx:id="productsTabPane" minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="262.0">
+                     <children>
+                        <ListView fx:id="productListView" layoutX="14.0" layoutY="14.0" prefHeight="745.0" prefWidth="453.0" />
+                        <Button fx:id="productAddButton" layoutX="482.0" layoutY="720.0" mnemonicParsing="false" onAction="#onAddButtonClick" prefHeight="39.0" prefWidth="78.0" text="Add" />
+                        <Button fx:id="productUpdateButton" layoutX="573.0" layoutY="720.0" mnemonicParsing="false" onAction="#onUpdateButtonClick" prefHeight="39.0" prefWidth="78.0" text="Update" />
+                        <Button fx:id="productDeleteButton" layoutX="660.0" layoutY="720.0" mnemonicParsing="false" onAction="#onDeleteButtonClick" prefHeight="39.0" prefWidth="78.0" text="Delete" />
+                        <TextField fx:id="productNameTextField" layoutX="482.0" layoutY="14.0" prefHeight="31.0" prefWidth="212.0" promptText="Name" />
+                        <TextField fx:id="productBrandTextField" layoutX="482.0" layoutY="61.0" prefHeight="31.0" prefWidth="212.0" promptText="Brand" />
+                        <TextField fx:id="productCategoryTextField" layoutX="482.0" layoutY="108.0" prefHeight="31.0" prefWidth="212.0" promptText="Category" />
+                        <TextArea fx:id="productDescriptionTextArea" layoutX="482.0" layoutY="154.0" prefHeight="200.0" prefWidth="212.0" promptText="Description" />
+                        <TextField fx:id="productPriceTextField" layoutX="482.0" layoutY="370.0" prefHeight="31.0" prefWidth="212.0" promptText="Price" />
+                        <TextField fx:id="productQuantityTextField" layoutX="482.0" layoutY="413.0" prefHeight="31.0" prefWidth="212.0" promptText="Quantity" />
+                        <RadioButton fx:id="productLiquidRadioButton" layoutX="1158.0" layoutY="14.0" mnemonicParsing="false" onAction="#onLiquidRadioButtonClick" prefHeight="27.0" prefWidth="108.0" text="Liquid" />
+                        <RadioButton fx:id="productHairDyeRadioButton" layoutX="1158.0" layoutY="41.0" mnemonicParsing="false" onAction="#onHairDyeRadioButtonClick" prefHeight="27.0" prefWidth="108.0" text="Hair Dye" />
+                        <RadioButton fx:id="productToolRadioButton" layoutX="1158.0" layoutY="68.0" mnemonicParsing="false" onAction="#onToolRadioButtonClick" prefHeight="27.0" prefWidth="108.0" text="Tool" />
+                        <TextField fx:id="productCapacityTextField" layoutX="482.0" layoutY="457.0" prefHeight="31.0" prefWidth="212.0" promptText="Capacity" />
+                        <TextField fx:id="productCompositionTextField" layoutX="482.0" layoutY="501.0" prefHeight="31.0" prefWidth="212.0" promptText="Composition" />
+                        <TextField fx:id="productTypeTextField" layoutX="482.0" layoutY="546.0" prefHeight="31.0" prefWidth="212.0" promptText="Type" />
+                        <TextField fx:id="productColorTextField" layoutX="482.0" layoutY="592.0" prefHeight="31.0" prefWidth="212.0" promptText="Color" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Users">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="262.0" />
+               </content>
+            </Tab>
+            <Tab text="Orders">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="262.0" />
+               </content>
+            </Tab>
+            <Tab text="Warehouses">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="262.0" />
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

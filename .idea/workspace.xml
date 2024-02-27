@@ -5,23 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80c69551-48a8-4031-a496-e8abd95b5a81" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Address.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Card.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Cart.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Comment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Customer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/HairDye.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Liquid.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Manager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Product.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Tool.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/MainWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Address.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Card.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Cart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Cart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Comment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/HairDye.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/HairDye.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Liquid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Liquid.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Manager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Tool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Tool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/main-window.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,28 +60,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.HelloApplication.executor": "Run",
-    "Application.Main.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Karolis/Documents/Github/WebshopPT",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Karolis/Downloads/CourseProjectFx&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Global Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.4091954&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Karolis\Documents\Github\WebshopPT\src\main\resources\com\example\webshoppt" />
@@ -94,6 +99,7 @@
     <attachedChunks>
       <set>
         <option value="jdk-19.0.2-corretto-19.0.2-4caba194b151-48ba4555" />
+        <option value="jdk-21.0.2-azul-21.0.2-4caba194b151-38275579" />
         <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
       </set>
     </attachedChunks>
@@ -109,10 +115,18 @@
       <workItem from="1708943407700" duration="4000" />
       <workItem from="1708963738232" duration="22000" />
       <workItem from="1708963768342" duration="3537000" />
+      <workItem from="1708972678967" duration="4247000" />
+      <workItem from="1708976963194" duration="953000" />
+      <workItem from="1709048256393" duration="10512000" />
+      <workItem from="1709060027238" duration="1195000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
