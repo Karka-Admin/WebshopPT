@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80c69551-48a8-4031-a496-e8abd95b5a81" name="Changes" comment="" />
+    <list default="true" id="80c69551-48a8-4031-a496-e8abd95b5a81" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/PT_CLASS_DIAGRAM.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PT_USE_CASE_DIAGRAM.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -71,6 +79,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Karka\Documents\GitHub\WebshopPT" />
       <recent name="C:\Users\Karolis\Documents\Github\WebshopPT\src\main\resources\com\example\webshoppt" />
       <recent name="C:\Users\Karolis\Documents\Github\WebshopPT\src\main\java\com\example\webshoppt" />
       <recent name="C:\Users\Karolis\Documents\Github\WebshopPT\src\main\resources" />
@@ -80,8 +89,6 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-19.0.2-corretto-19.0.2-4caba194b151-48ba4555" />
-        <option value="jdk-21.0.2-azul-21.0.2-4caba194b151-38275579" />
         <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
       </set>
     </attachedChunks>
@@ -101,6 +108,8 @@
       <workItem from="1708976963194" duration="953000" />
       <workItem from="1709048256393" duration="10512000" />
       <workItem from="1709060027238" duration="1328000" />
+      <workItem from="1709132922374" duration="246000" />
+      <workItem from="1709133236211" duration="6014000" />
     </task>
     <servers />
   </component>

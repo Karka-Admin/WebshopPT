@@ -4,6 +4,8 @@ module com.example.webshoppt {
 
     requires org.kordamp.bootstrapfx.core;
     requires lombok;
+    requires mysql.connector.j;
+    requires java.sql;
 
     opens com.example.webshoppt to javafx.fxml;
     exports com.example.webshoppt;
