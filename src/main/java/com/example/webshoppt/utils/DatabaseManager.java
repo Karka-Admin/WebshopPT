@@ -52,7 +52,6 @@ public class DatabaseManager {
 
     public void sendPreparedStatementQuery(PreparedStatement preparedStatement) {
         try {
-            //this.preparedStatement = connection.prepareStatement(query);
             preparedStatement.execute();
         } catch (Exception errors) {
             errors.printStackTrace();

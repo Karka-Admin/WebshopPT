@@ -5,32 +5,49 @@ import com.example.webshoppt.model.Liquid;
 import com.example.webshoppt.model.Product;
 import com.example.webshoppt.model.Tool;
 import com.example.webshoppt.utils.DatabaseManager;
-import com.mysql.cj.x.protobuf.MysqlxPrepare;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import lombok.Data;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class MainWindow {
-    public ListView<Product> productListView;
-    public Button productAddButton;
-    public Button productUpdateButton;
-    public Button productDeleteButton;
-    public Button productRefreshListButton;
-    public TextField productNameTextField;
-    public TextField productBrandTextField;
-    public TextField productCategoryTextField;
-    public TextArea productDescriptionTextArea;
-    public TextField productPriceTextField;
-    public TextField productQuantityTextField;
-    public TextField productCapacityTextField;
-    public TextField productCompositionTextField;
-    public TextField productTypeTextField;
-    public TextField productColorTextField;
-    public RadioButton productLiquidRadioButton;
-    public RadioButton productHairDyeRadioButton;
-    public RadioButton productToolRadioButton;
+    @FXML
+    private ListView<Product> productListView;
+    @FXML
+    private Button productAddButton;
+    @FXML
+    private Button productUpdateButton;
+    @FXML
+    private Button productDeleteButton;
+    @FXML
+    private Button productRefreshListButton;
+    @FXML
+    private TextField productNameTextField;
+    @FXML
+    private TextField productBrandTextField;
+    @FXML
+    private TextField productCategoryTextField;
+    @FXML
+    private TextArea productDescriptionTextArea;
+    @FXML
+    private TextField productPriceTextField;
+    @FXML
+    private TextField productQuantityTextField;
+    @FXML
+    private TextField productCapacityTextField;
+    @FXML
+    private TextField productCompositionTextField;
+    @FXML
+    private TextField productTypeTextField;
+    @FXML
+    private TextField productColorTextField;
+    @FXML
+    private RadioButton productLiquidRadioButton;
+    @FXML
+    private RadioButton productHairDyeRadioButton;
+    @FXML
+    private RadioButton productToolRadioButton;
 
     public void onAddButtonClick() {
         DatabaseManager databaseManager = new DatabaseManager();
@@ -130,9 +147,10 @@ public class MainWindow {
     }
 
     public void onUpdateButtonClick() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
         try {
-            DatabaseManager databaseManager = new DatabaseManager();
-            databaseManager.openConnection();
             Product product = productListView.getSelectionModel().getSelectedItem();
             if (product instanceof HairDye) {
                 PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
@@ -214,16 +232,18 @@ public class MainWindow {
                 preparedStatement.setInt(9, product.getId());
                 databaseManager.sendPreparedStatementQuery(preparedStatement);
             }
-            databaseManager.closeConnection();
         } catch (Exception upErr) {
             upErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
         }
     }
 
     public void onDeleteButtonClick() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
         try {
-            DatabaseManager databaseManager = new DatabaseManager();
-            databaseManager.openConnection();
             Product product = productListView.getSelectionModel().getSelectedItem();
             PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
                     "DELETE FROM products WHERE product_id = ?;"
@@ -231,9 +251,10 @@ public class MainWindow {
             preparedStatement.setInt(1, product.getId());
             databaseManager.sendPreparedStatementQuery(preparedStatement);
             productListView.getItems().remove(product);
-            databaseManager.closeConnection();
         } catch (Exception delErr) {
             delErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
         }
     }
 
@@ -295,9 +316,14 @@ public class MainWindow {
                     productListView.getItems().add(hairDye);
                 }
             }
-            databaseManager.closeConnection();
         } catch (Exception resultErr) {
             resultErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
         }
+    }
+
+    public void checkTabPriveleges() {
+
     }
 }

@@ -32,8 +32,8 @@ Kuriama parduotuvė, prie šios kuriamos sistemos jungiasi vartotojai. Vartotoja
 - [ ] (OPTIONAL) Pateikiama statistika (text + graph). Pavyzdžiui, kiek parduota per kažkokį intervalą, kokia suma, kiek skirtingų užsakymų ir pan. Jungti su 8 užduotimi
 
 ### Grafinė vartotojo sąsaja
-- [ ] Remiantis kursinio darbo užduotimis, suprojektuoti sistemos klasių diagramą, kuri atitiktų objektinio programavimo principus ir leistų paprastai kurti ir valdyti visus projekto objektus
-- [ ] Aprašyti visas suprojektuotas klases, su tinkamai parinktais klasių kintamaisiais, jų tipais. Turi būti nemažiau kaip 2 tarpusavyje besisiejančios (pageidautinas kompozicijos ar agregacijos ryšys) klasės
+- [X] Remiantis kursinio darbo užduotimis, suprojektuoti sistemos klasių diagramą, kuri atitiktų objektinio programavimo principus ir leistų paprastai kurti ir valdyti visus projekto objektus
+- [X] Aprašyti visas suprojektuotas klases, su tinkamai parinktais klasių kintamaisiais, jų tipais. Turi būti nemažiau kaip 2 tarpusavyje besisiejančios (pageidautinas kompozicijos ar agregacijos ryšys) klasės
 - [ ] Kiekvienai iš sukurtų klasių reikia realizuoti CRUD (C – create, naujo objekto kūrimas ar sudedamojo objekto pridėjimas; R – read, duomenų apie objektą gavimas; U – update, objekto duomenų atnaujinimas; D – delete, objekto šalinimas (ne tiek objekto naikinimas, kiek jį sudarančių kitų objektų šalinimas)) funkcijas. Vartotojui turi būti leidžiama valdyti (vykdyti CRUD funckijas) su visais sistemos objektais.
 - [ ] Reikia sukurti grafinę vartotojo sąsają. Grafinės sąsajos išvaizda gali būti kokia norite, bet turėtų būti panaudoti šie komponentai:
     - [ ] Vienas pagrindinis langas ir bent po 1 iššokantį (perspėjimo ar klaidos pranešimą, spalvos ar failo pasirinkimo dialogą) ir 1 papildomą langą

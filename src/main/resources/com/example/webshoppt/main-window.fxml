@@ -11,14 +11,14 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.webshoppt.fxcontrollers.MainWindow">
    <children>
-      <TabPane prefHeight="800.0" prefWidth="1280.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="mainTabPane" prefHeight="800.0" prefWidth="1280.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab fx:id="shopTab" text="Shop">
             <content>
               <AnchorPane fx:id="shopTabPane" minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="291.0" />
             </content>
           </Tab>
-            <Tab text="Cart">
+            <Tab fx:id="cartTab" text="Cart">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="262.0" />
                </content>
@@ -54,7 +54,7 @@
                   <AnchorPane fx:id="usersTabPane" minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="262.0" />
                </content>
             </Tab>
-            <Tab text="Orders">
+            <Tab fx:id="ordersTab" text="Orders">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="262.0" />
                </content>
