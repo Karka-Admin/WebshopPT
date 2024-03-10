@@ -9,18 +9,19 @@ public class HairDye extends Liquid {
     private String color;
 
     public HairDye(
+            int id,
             int quantity,
-            int averageRating,
-            int capacity,
+            float averageRating,
             float price,
             String name,
             String brand,
             String description,
             String category,
+            int capacity,
             String composition,
             String type,
             String color) {
-        this.id = 0;
+        this.id = id;
         this.quantity = quantity;
         this.averageRating = averageRating;
         this.capacity = capacity;

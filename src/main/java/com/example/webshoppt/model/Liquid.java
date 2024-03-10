@@ -24,17 +24,18 @@ public class Liquid extends Product {
         this.type = null;
     }
     public Liquid(
+            int id,
             int quantity,
-            int averageRating,
-            int capacity,
+            float averageRating,
             float price,
             String name,
             String brand,
             String description,
             String category,
+            int capacity,
             String composition,
             String type) {
-        this.id = 0;
+        this.id = id;
         this.quantity = quantity;
         this.averageRating = averageRating;
         this.capacity = capacity;

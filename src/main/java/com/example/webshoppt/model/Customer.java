@@ -14,4 +14,5 @@ public class Customer extends User {
     private LocalDate birthDate;
     private List<Cart> purchases;
     private Card card;
+    private Cart personalCart;
 }

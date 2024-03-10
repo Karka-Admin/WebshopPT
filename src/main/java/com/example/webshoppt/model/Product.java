@@ -8,7 +8,7 @@ import lombok.Setter;
 public class Product {
     protected int id;
     protected int quantity;
-    protected int averageRating;
+    protected float averageRating;
     protected float price;
     protected String name;
     protected String brand;
@@ -18,7 +18,7 @@ public class Product {
     public Product() {
         this.id = 0;
         this.quantity = 0;
-        this.averageRating = 0;
+        this.averageRating = 0.0F;
         this.price = 0.0F;
         this.name = null;
         this.brand = null;
@@ -27,14 +27,15 @@ public class Product {
     }
 
     public Product(
+            int id,
             int quantity,
-            int averageRating,
+            float averageRating,
             float price,
             String name,
             String brand,
             String description,
             String category) {
-        this.id = 0;
+        this.id = id;
         this.quantity = quantity;
         this.averageRating = averageRating;
         this.price = price;
@@ -42,5 +43,10 @@ public class Product {
         this.brand = brand;
         this.description = description;
         this.category = category;
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toString(id) + " | " + name + " | " + Float.toString(price) + " | " + Integer.toString(quantity);
     }
 }

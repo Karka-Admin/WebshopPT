@@ -1,0 +1,26 @@
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+        databaseManager.sendQuery("INSERT INTO products (product_id, quantity, average_rating, price, name, " +
+                "brand, description, category, product_type, capacity, composition, type)" +
+                "VALUES (0, 2, 4.4, 6.19, 'COLOR VIVE, šampūnas dažytiems plaukams', 'ELVITAL'," +
+                "'Jūsų plaukai dažyti viena spalva arba sruogelėmis? Puoselėjamasis šampūnas su raudonaisiais bijūnais"+
+                " ir UV filtrais maitina, gaivina ir saugo dažytus plaukus iki 10 savaičių.' 'Shampoo', " +
+                "'400', 'Aqua/Water, Sodium Laureth Sulfate, Dimethicone, Coco-Betaine, Sodium Chloride, " +
+                "Glycol Distearate, Guar Hydroxypropyltrimonium Chloride, Cocamide Mipa', 'Plaukų priežiūra')");
+        databaseManager.sendQuery("SELECT * FROM products");
+        databaseManager.printProductQuery();
+        databaseManager.closeConnection();
+
+
+INSERT INTO `products` (`QUANTITY`, `AVERAGE_RATING`, `PRICE`, `NAME`, `BRAND`, `DESCRIPTION`, `CATEGORY`, `PRODUCT_TYPE`, `CAPACITY`, `COMPOSITION`, `TYPE`) VALUES ('12', '2.5', '16.99', 'GARNIER BOTANIC THERAPY, RICIN & ALMOND, plaukų šampūnas', 'GARNIER', 'Stiprinamasis ricinų aliejus ir maitinamasis migdolų aliejus sumaišyti unikalioje produkto formulėje, skirtoje silpniems, linkusiems slinkti plaukams.', 'Shampoo', 'Liquid', '400', 'Aqua/Water, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Lauryl Sulfate, Glycerin, Glycol Distearate, Amodimethicone, Sodium Chloride, CI 19140/Yellow 5, CI 14700/Red 4, Guar Hydroxypropyltrimonium Chloride, Coco-Betaine, Ricinus Communis Oil/Cas', 'Plaukų priežiūra')
+
+Professional performance
+SYOSS
+Hairdye
+Puoselėjantys dažai veikia dvejopai: pirmiausiai apsaugo plaukus nuo lūžinėjimo ir pažeidimų, o tada tolygiai padengia juos intensyvia spalva.
+7.49
+5
+500
+Dažomasis kremas: Aqua (Water, Eau), Cetearyl Alcohol, Ammonium Hydroxide, Glyceryl Stearate SE, Ceteareth-20, Octyldodecanol, Sodium Laureth Sulfate
+Hairdye
+Dark Violet

@@ -8,6 +8,5 @@ import java.util.List;
 @Getter
 @Setter
 public class Manager extends User {
-    private boolean isAdmin;
-    private List<Cart> managedPurchases;
+    private List<Order> assignedOrders;
 }

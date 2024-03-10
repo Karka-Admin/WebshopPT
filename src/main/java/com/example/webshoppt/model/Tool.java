@@ -9,15 +9,16 @@ public class Tool extends Product {
     private String type;
 
     public Tool(
+            int id,
             int quantity,
-            int averageRating,
+            float averageRating,
             float price,
             String name,
             String brand,
             String description,
             String category,
             String type) {
-        this.id = 0;
+        this.id = id;
         this.quantity = quantity;
         this.averageRating = averageRating;
         this.price = price;
