@@ -1,17 +1,24 @@
 package com.example.webshoppt.fxcontrollers;
 
-import com.example.webshoppt.model.HairDye;
-import com.example.webshoppt.model.Liquid;
-import com.example.webshoppt.model.Product;
-import com.example.webshoppt.model.Tool;
+import com.example.webshoppt.model.*;
 import com.example.webshoppt.utils.DatabaseManager;
+import com.example.webshoppt.utils.UserManager;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 
+import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ResourceBundle;
 
 public class MainWindow {
+    @FXML
+    private AnchorPane mainWindowAnchorPane;
     @FXML
     private ListView<Product> productListView;
     @FXML
@@ -48,6 +55,24 @@ public class MainWindow {
     private RadioButton productHairDyeRadioButton;
     @FXML
     private RadioButton productToolRadioButton;
+    @FXML
+    private Button usersRefreshButton;
+    @FXML
+    private TableView<User> usersTableView;
+    @FXML
+    private ObservableList<User> usersObservableList;
+    @FXML
+    private TableColumn<User, Integer> usersIdTableColumn;
+    @FXML
+    private TableColumn<User, String> usersEmailTableColumn;
+    @FXML
+    private TableColumn<User, String> usersPasswordTableColumn;
+    @FXML
+    private TableColumn<User, String> usersFirstnameTableColumn;
+    @FXML
+    private TableColumn<User, String> usersLastnameTableColumn;
+    @FXML
+    private TableColumn usersAccountTypeTableColumn;
 
     public void onAddButtonClick() {
         DatabaseManager databaseManager = new DatabaseManager();
@@ -321,6 +346,20 @@ public class MainWindow {
         } finally {
             databaseManager.closeConnection();
         }
+    }
+
+    public void updateUsersTableView() {
+        usersObservableList = FXCollections.observableArrayList();
+
+        usersIdTableColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        usersEmailTableColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        usersPasswordTableColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
+        usersFirstnameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        usersLastnameTableColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
+        //usersAccountTypeTableColumn.setCellValueFactory(new PropertyValueFactory<>("AccountType"));
+
+        usersObservableList.add(new User(1, "john.doe@example.com", "password", "John", "Doe", AccountType.MANAGER));
+        usersTableView.setItems(usersObservableList);
     }
 
     public void checkTabPriveleges() {

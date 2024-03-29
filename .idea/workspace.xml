@@ -5,7 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80c69551-48a8-4031-a496-e8abd95b5a81" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/utils/UserManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/LoginWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/LoginWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/MainWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/AccountType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/AccountType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/login-window.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/login-window.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/main-window.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/main-window.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +66,7 @@
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Karolis/Downloads/CourseProjectFx&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Karka/Downloads/CourseProjectFx (1)/CourseProjectFx/CourseProjectFx&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -84,7 +91,6 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-19.0.2-corretto-19.0.2-4caba194b151-48ba4555" />
         <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
       </set>
     </attachedChunks>
@@ -113,6 +119,10 @@
       <workItem from="1710353517011" duration="22000" />
       <workItem from="1710360378361" duration="281000" />
       <workItem from="1710525241934" duration="717000" />
+      <workItem from="1711633526788" duration="459000" />
+      <workItem from="1711647866256" duration="15446000" />
+      <workItem from="1711675962015" duration="3193000" />
+      <workItem from="1711679170733" duration="1091000" />
     </task>
     <servers />
   </component>

@@ -5,11 +5,13 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.webshoppt.fxcontrollers.MainWindow">
+<AnchorPane fx:id="mainWindowAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.webshoppt.fxcontrollers.MainWindow">
    <children>
       <TabPane fx:id="mainTabPane" prefHeight="800.0" prefWidth="1280.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -51,7 +53,20 @@
           </Tab>
             <Tab fx:id="usersTab" text="Users">
                <content>
-                  <AnchorPane fx:id="usersTabPane" minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="262.0" />
+                  <AnchorPane fx:id="usersTabPane" minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="262.0">
+                     <children>
+                        <TableView fx:id="usersTableView" layoutX="14.0" layoutY="14.0" prefHeight="742.0" prefWidth="899.0">
+                          <columns>
+                            <TableColumn fx:id="usersIdTableColumn" prefWidth="90.39999103546143" text="Id" />
+                            <TableColumn fx:id="usersEmailTableColumn" prefWidth="237.6000213623047" text="Email" />
+                              <TableColumn fx:id="usersPasswordTableColumn" minWidth="0.0" prefWidth="158.39996337890625" text="Password" />
+                              <TableColumn fx:id="usersFirstnameTableColumn" minWidth="0.0" prefWidth="157.60003662109375" text="First name" />
+                              <TableColumn fx:id="usersLastnameTableColumn" prefWidth="152.7999267578125" text="Last name" />
+                              <TableColumn fx:id="usersAccountTypeTableColumn" prefWidth="103.199951171875" text="Account type" />
+                          </columns>
+                        </TableView>
+                        <Button fx:id="usersRefreshButton" layoutX="933.0" layoutY="14.0" mnemonicParsing="false" onAction="#updateUsersTableView" prefHeight="26.0" prefWidth="130.0" text="Refresh" />
+                     </children></AnchorPane>
                </content>
             </Tab>
             <Tab fx:id="ordersTab" text="Orders">

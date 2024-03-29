@@ -19,7 +19,7 @@
       <Button fx:id="loginRegisterButton" layoutX="320.0" layoutY="217.0" mnemonicParsing="false" onAction="#onLoginRegisterButtonClick" prefHeight="39.0" prefWidth="170.0" text="Register" />
       <TextField fx:id="loginNameTextField" layoutX="151.0" layoutY="69.0" prefHeight="39.0" prefWidth="163.0" promptText="Name" />
       <TextField fx:id="loginSurnameTextField" layoutX="320.0" layoutY="69.0" prefHeight="39.0" prefWidth="170.0" promptText="Surname" />
-      <Text fx:id="loginLogText" layoutX="151.0" layoutY="283.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="338.0">
+      <Text fx:id="loginLogText" layoutX="151.0" layoutY="283.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter email and password to login. Registering requires to also enter your name and surname." wrappingWidth="338.0">
          <font>
             <Font size="16.0" />
          </font>

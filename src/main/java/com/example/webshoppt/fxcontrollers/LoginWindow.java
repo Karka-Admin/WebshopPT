@@ -1,20 +1,28 @@
 package com.example.webshoppt.fxcontrollers;
 
 import com.example.webshoppt.Main;
+import com.example.webshoppt.model.AccountType;
+import com.example.webshoppt.model.User;
 import com.example.webshoppt.utils.DatabaseManager;
 import com.example.webshoppt.utils.PasswordManager;
+import com.example.webshoppt.utils.UserManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+@Getter
+@Setter
 public class LoginWindow {
     @FXML
     private TextField loginNameTextField;
@@ -35,6 +43,15 @@ public class LoginWindow {
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.openConnection();
 
+        if (loginEmailTextField.getText().trim().isEmpty() || loginPasswordPasswordField.getText().trim().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Login failed.");
+            alert.setHeaderText("Login failed.");
+            alert.setContentText("Missing information.");
+            alert.showAndWait();
+            return;
+        }
+
         try {
             databaseManager.sendStatementQuery("SELECT email, password FROM users");
             ResultSet resultSet = databaseManager.getResultSet();
@@ -42,6 +59,9 @@ public class LoginWindow {
                 if (loginEmailTextField.getText().equals(resultSet.getString("email")) &&
                         PasswordManager.validatePassword(loginPasswordPasswordField.getText(), resultSet.getString("password"))) {
                     loginLogText.setText("Login succesful.");
+
+                    UserManager userManager = new UserManager();
+                    userManager.setActiveAccountType(AccountType.ADMIN);
 
                     FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main-window.fxml"));
                     Scene mainScene = new Scene(fxmlLoader.load(), 1280, 800);
@@ -52,8 +72,12 @@ public class LoginWindow {
 
                     Stage loginStage = (Stage) loginLoginButton.getScene().getWindow();
                     loginStage.close();
-                } else {
-                    loginLogText.setText("Email/Password incorrect.");
+                } else if (resultSet.isLast()) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Bad credentials.");
+                    alert.setHeaderText("Login failed.");
+                    alert.setContentText("Email/Password incorrect.");
+                    alert.showAndWait();
                 }
             }
         } catch (Exception loginErr) {
@@ -68,8 +92,42 @@ public class LoginWindow {
         databaseManager.openConnection();
 
         try {
+            if (loginEmailTextField.getText().trim().isEmpty() ||
+                loginNameTextField.getText().trim().isEmpty() ||
+                loginSurnameTextField.getText().trim().isEmpty() ||
+                loginPasswordPasswordField.getText().trim().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Registration unsuccsessful.");
+                alert.setHeaderText("Registration unsuccessful.");
+                alert.setContentText("Missing information.");
+                alert.showAndWait();
+                return;
+            }
+
             if (!loginEmailTextField.getText().matches("\\w+@\\w+[.]{1}com")) {
                 loginLogText.setText("Bad email address");
+                return;
+            }
+
+            databaseManager.sendStatementQuery("SELECT email FROM users WHERE email = '" +
+                    loginEmailTextField.getText() + "'");
+
+//            PreparedStatement emailCheck = databaseManager.getConnection().prepareStatement(
+//                    "SELECT email FROM users WHERE email = ?"
+//            );
+//            emailCheck.setString(1, loginEmailTextField.getText().trim());
+            // databaseManager.sendPreparedStatementQuery(emailCheck);
+            ResultSet resultSet = databaseManager.getResultSet();
+
+            if (resultSet != null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Registration unsuccsessful.");
+                alert.setHeaderText("Registration unsuccessful.");
+                alert.setContentText("Email already registered.");
+                alert.showAndWait();
+                return;
+            }
+            if (true) {
                 return;
             }
 
@@ -84,7 +142,12 @@ public class LoginWindow {
             preparedStatement.setString(4, loginSurnameTextField.getText());
             preparedStatement.setInt(5, 0);
             databaseManager.sendPreparedStatementQuery(preparedStatement);
-            loginLogText.setText("Registration successful. Please login.");
+            //loginLogText.setText("Registration successful. Please login.");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Registration successful.");
+            alert.setHeaderText("Success.");
+            alert.setContentText("Registration successful, please login.");
+            alert.showAndWait();
         } catch (Exception regsiterErr) {
             regsiterErr.printStackTrace();
         } finally {
