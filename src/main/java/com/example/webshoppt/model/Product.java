@@ -47,6 +47,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return Integer.toString(id) + " | " + name + " | " + Float.toString(price) + " | " + Integer.toString(quantity);
+        return Integer.toString(id) + "\t|\t" + name + " | " + Float.toString(price) + " | "
+                + Integer.toString(quantity);
     }
 }

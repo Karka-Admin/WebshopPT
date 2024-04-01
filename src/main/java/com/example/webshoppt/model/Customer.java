@@ -10,8 +10,7 @@ import java.util.List;
 @Setter
 public class Customer extends User {
     private Address shippingAddress;
-    private Address billingAddress;
-    private LocalDate birthDate;
+    //private Address billingAddress;
     private List<Cart> purchases;
     private Card card;
     private Cart personalCart;

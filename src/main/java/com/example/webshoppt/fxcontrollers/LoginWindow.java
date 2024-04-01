@@ -1,11 +1,12 @@
 package com.example.webshoppt.fxcontrollers;
 
 import com.example.webshoppt.Main;
-import com.example.webshoppt.model.AccountType;
+import com.example.webshoppt.model.Admin;
+import com.example.webshoppt.model.Customer;
+import com.example.webshoppt.model.Manager;
 import com.example.webshoppt.model.User;
 import com.example.webshoppt.utils.DatabaseManager;
 import com.example.webshoppt.utils.PasswordManager;
-import com.example.webshoppt.utils.UserManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.shape.CubicCurveTo;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -53,15 +55,13 @@ public class LoginWindow {
         }
 
         try {
-            databaseManager.sendStatementQuery("SELECT email, password FROM users");
+            databaseManager.sendStatementQuery("SELECT * FROM users");
             ResultSet resultSet = databaseManager.getResultSet();
+            boolean loginSuccessfull = false;
             while(resultSet.next()) {
                 if (loginEmailTextField.getText().equals(resultSet.getString("email")) &&
                         PasswordManager.validatePassword(loginPasswordPasswordField.getText(), resultSet.getString("password"))) {
                     loginLogText.setText("Login succesful.");
-
-                    UserManager userManager = new UserManager();
-                    userManager.setActiveAccountType(AccountType.ADMIN);
 
                     FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main-window.fxml"));
                     Scene mainScene = new Scene(fxmlLoader.load(), 1280, 800);
@@ -70,15 +70,54 @@ public class LoginWindow {
                     mainStage.setScene(mainScene);
                     mainStage.show();
 
+                    if (resultSet.getInt("account_type") == 0) {
+                        Customer customer = new Customer();
+                        customer.setId(resultSet.getInt("user_id"));
+                        customer.setName(resultSet.getString("name"));
+                        customer.setSurname(resultSet.getString("surname"));
+                        customer.setEmail(resultSet.getString("email"));
+                        customer.setPassword(resultSet.getString("password"));
+                        customer.setAccountType(resultSet.getInt("account_type"));
+
+                        MainWindow mainWindowController = fxmlLoader.getController();
+                        mainWindowController.initUser(customer);
+                    } else if (resultSet.getInt("account_type") == 1) {
+                        Manager manager = new Manager();
+                        manager.setId(resultSet.getInt("user_id"));
+                        manager.setName(resultSet.getString("name"));
+                        manager.setSurname(resultSet.getString("surname"));
+                        manager.setEmail(resultSet.getString("email"));
+                        manager.setPassword(resultSet.getString("password"));
+                        manager.setAccountType(resultSet.getInt("account_type"));
+
+                        MainWindow mainWindowController = fxmlLoader.getController();
+                        mainWindowController.initUser(manager);
+                    } else if (resultSet.getInt("account_type") == 2) {
+                        Admin admin = new Admin();
+                        admin.setId(resultSet.getInt("user_id"));
+                        admin.setName(resultSet.getString("name"));
+                        admin.setSurname(resultSet.getString("surname"));
+                        admin.setEmail(resultSet.getString("email"));
+                        admin.setPassword(resultSet.getString("password"));
+                        admin.setAccountType(resultSet.getInt("account_type"));
+
+                        MainWindow mainWindowController = fxmlLoader.getController();
+                        mainWindowController.initUser(admin);
+                    }
+
                     Stage loginStage = (Stage) loginLoginButton.getScene().getWindow();
                     loginStage.close();
-                } else if (resultSet.isLast()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Bad credentials.");
-                    alert.setHeaderText("Login failed.");
-                    alert.setContentText("Email/Password incorrect.");
-                    alert.showAndWait();
+
+                    loginSuccessfull = true;
                 }
+            }
+
+            if (!loginSuccessfull) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Bad credentials.");
+                alert.setHeaderText("Login failed.");
+                alert.setContentText("Email/Password incorrect.");
+                alert.showAndWait();
             }
         } catch (Exception loginErr) {
             loginErr.printStackTrace();
@@ -104,7 +143,7 @@ public class LoginWindow {
                 return;
             }
 
-            if (!loginEmailTextField.getText().matches("\\w+@\\w+[.]{1}com")) {
+            if (!loginEmailTextField.getText().matches("\\w+@\\w+[.]{1}\\w+")) {
                 loginLogText.setText("Bad email address");
                 return;
             }
@@ -112,22 +151,13 @@ public class LoginWindow {
             databaseManager.sendStatementQuery("SELECT email FROM users WHERE email = '" +
                     loginEmailTextField.getText() + "'");
 
-//            PreparedStatement emailCheck = databaseManager.getConnection().prepareStatement(
-//                    "SELECT email FROM users WHERE email = ?"
-//            );
-//            emailCheck.setString(1, loginEmailTextField.getText().trim());
-            // databaseManager.sendPreparedStatementQuery(emailCheck);
             ResultSet resultSet = databaseManager.getResultSet();
-
-            if (resultSet != null) {
+            if (resultSet.next()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Registration unsuccsessful.");
                 alert.setHeaderText("Registration unsuccessful.");
                 alert.setContentText("Email already registered.");
                 alert.showAndWait();
-                return;
-            }
-            if (true) {
                 return;
             }
 
@@ -142,7 +172,7 @@ public class LoginWindow {
             preparedStatement.setString(4, loginSurnameTextField.getText());
             preparedStatement.setInt(5, 0);
             databaseManager.sendPreparedStatementQuery(preparedStatement);
-            //loginLogText.setText("Registration successful. Please login.");
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Registration successful.");
             alert.setHeaderText("Success.");

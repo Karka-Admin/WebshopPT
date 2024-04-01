@@ -5,13 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80c69551-48a8-4031-a496-e8abd95b5a81" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/utils/UserManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/LoginWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/LoginWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/MainWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/AccountType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/AccountType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Address.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Card.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Product.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/login-window.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/login-window.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/utils/UserManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/main-window.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/main-window.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -37,9 +42,12 @@
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
       </MavenGeneralSettings>
     </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -66,7 +74,7 @@
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Karka/Downloads/CourseProjectFx (1)/CourseProjectFx/CourseProjectFx&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Karka/Downloads/JavaSpring-main(1)/JavaSpring-main&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -75,7 +83,8 @@
     &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.4091954&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
+    &quot;settings.editor.splitter.proportion&quot;: &quot;0.28134558&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -123,6 +132,11 @@
       <workItem from="1711647866256" duration="15446000" />
       <workItem from="1711675962015" duration="3193000" />
       <workItem from="1711679170733" duration="1091000" />
+      <workItem from="1711818813499" duration="4750000" />
+      <workItem from="1711823694322" duration="13990000" />
+      <workItem from="1711841256663" duration="10243000" />
+      <workItem from="1711985851311" duration="1617000" />
+      <workItem from="1711988520873" duration="21278000" />
     </task>
     <servers />
   </component>
