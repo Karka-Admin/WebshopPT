@@ -50,7 +50,7 @@
                               <ContextMenu>
                                 <items>
                                   <MenuItem fx:id="cartRemoveFromCartMenuItem" mnemonicParsing="false" onAction="#onRemoveFromCartMenuItemClick" text="Remove from cart" />
-                                  <MenuItem fx:id="cartCommentMenuItem" mnemonicParsing="false" text="Comment" />
+                                  <MenuItem fx:id="cartCommentMenuItem" mnemonicParsing="false" onAction="#onCommentMenuItemClick" text="Comment" />
                                 </items>
                               </ContextMenu>
                            </contextMenu>
@@ -151,7 +151,8 @@
                            </contextMenu>
                         </TableView>
                         <Button fx:id="usersRefreshButton" layoutX="933.0" layoutY="14.0" mnemonicParsing="false" onAction="#updateUsersTableView" prefHeight="26.0" prefWidth="130.0" text="Refresh" />
-                     </children></AnchorPane>
+                     </children>
+                  </AnchorPane>
                </content>
             </Tab>
             <Tab fx:id="ordersTab" text="Orders">

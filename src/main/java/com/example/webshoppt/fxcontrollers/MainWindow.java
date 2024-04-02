@@ -1,15 +1,20 @@
 package com.example.webshoppt.fxcontrollers;
 
+import com.example.webshoppt.Main;
 import com.example.webshoppt.model.*;
 import com.example.webshoppt.utils.DatabaseManager;
 import com.example.webshoppt.utils.PasswordManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import lombok.Data;
 
 import java.net.URL;
@@ -23,6 +28,10 @@ public class MainWindow implements Initializable {
     private Admin admin;
     private Manager manager;
     private Customer customer;
+
+    // MAIN WINDOW ELEMENTS
+    @FXML
+    private TabPane mainTabPane;
 
     // SHOP TAB ELEMENTS
     @FXML
@@ -153,28 +162,14 @@ public class MainWindow implements Initializable {
 
         if (activeUser instanceof Admin) {
             admin = (Admin) activeUser;
-
-            shopTab.setDisable(false);
-            cartTab.setDisable(false);
-            warehouseTab.setDisable(false);
-            usersTab.setDisable(false);
-            ordersTab.setDisable(false);
         } else if (activeUser instanceof Manager) {
             manager = (Manager) activeUser;
-
-            shopTab.setDisable(false);
-            cartTab.setDisable(false);
-            warehouseTab.setDisable(false);
-            usersTab.setDisable(true);
-            ordersTab.setDisable(false);
+            mainTabPane.getTabs().remove(usersTab);
         } else if (activeUser instanceof Customer) {
             customer = (Customer) activeUser;
-
-            shopTab.setDisable(false);
-            cartTab.setDisable(false);
-            warehouseTab.setDisable(true);
-            usersTab.setDisable(true);
-            ordersTab.setDisable(true);
+            mainTabPane.getTabs().remove(warehouseTab);
+            mainTabPane.getTabs().remove(usersTab);
+            mainTabPane.getTabs().remove(ordersTab);
         }
         initWelcomeUserText(activeUser);
         initShippingInformation(customer);
@@ -243,7 +238,24 @@ public class MainWindow implements Initializable {
     }
 
     public void onRemoveFromCartMenuItemClick() {
-        cartCartListView.getItems().remove(cartCartListView.getSelectionModel().getSelectedItem());
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        try {
+            PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                    "UPDATE products SET quantity = (quantity + ?) WHERE product_id = ?"
+            );
+            preparedStatement.setInt(1,
+                    cartCartListView.getSelectionModel().getSelectedItem().getQuantity());
+            preparedStatement.setInt(2, cartCartListView.getSelectionModel().getSelectedItem().getId());
+            databaseManager.sendPreparedStatementQuery(preparedStatement);
+            cartCartListView.getItems().remove(cartCartListView.getSelectionModel().getSelectedItem());
+            updateProductListView(shopProductsListView);
+        } catch (Exception removErr) {
+            removErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
+        }
     }
 
     public void onUsersChangePasswordMenuItemClick() {
@@ -410,6 +422,27 @@ public class MainWindow implements Initializable {
             remErr.printStackTrace();
         } finally {
             databaseManager.closeConnection();
+        }
+    }
+
+    public void onCommentMenuItemClick() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
+            CommentWindow commentWindow = fxmlLoader.getController();
+            if (admin != null) {
+                commentWindow.initData(admin, cartCartListView.getSelectionModel().getSelectedItem());
+            } else if (manager != null) {
+                commentWindow.initData(manager, cartCartListView.getSelectionModel().getSelectedItem());
+            } else if (customer != null) {
+                commentWindow.initData(customer, cartCartListView.getSelectionModel().getSelectedItem());
+            }
+            Scene commentScene = new Scene(fxmlLoader.load(), 335, 600);
+            Stage commentStage = new Stage();
+            commentStage.setTitle("Comment");
+            commentStage.setScene(commentScene);
+            commentStage.show();
+        } catch (Exception comErr) {
+            comErr.printStackTrace();
         }
     }
 
