@@ -285,11 +285,64 @@ public class MainWindow implements Initializable {
     }
 
     public void onViewChatMenuItemClick() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
 
+        try {
+            cartCommentSectionTreeView.setRoot(new TreeItem<>());
+            cartCommentSectionTreeView.setShowRoot(false);
+            cartCommentSectionTreeView.getRoot().setExpanded(true);
+
+            databaseManager.sendStatementQuery("SELECT * FROM comments");
+
+            ResultSet results = databaseManager.getResultSet();
+            while (results.next()) {
+                Comment comment = new Comment(
+                        results.getInt("COMMENT_ID"),
+                        results.getInt("PARENT_ID"),
+                        results.getInt("PRODUCT_ID"),
+                        results.getInt("RATING"),
+                        results.getInt("USER_ID"),
+                        results.getString("TITLE"),
+                        results.getString("BODY"),
+                        results.getDate("DATE").toLocalDate()
+                );
+                cartCommentSectionTreeView.getRoot().getChildren().add(new TreeItem<>(comment));
+            }
+        } catch (Exception treeUpErr) {
+            treeUpErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
+        }
     }
 
     public void onReplyMenuItemClick() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
+            Parent parent = (Parent) fxmlLoader.load();
+            CommentWindow commentWindow = fxmlLoader.getController();
 
+            if (admin != null) {
+                commentWindow.initData(admin, cartCartListView.getSelectionModel().getSelectedItem());
+            } else if (manager != null) {
+                commentWindow.initData(manager, cartCartListView.getSelectionModel().getSelectedItem());
+            } else if (customer != null) {
+                commentWindow.initData(customer, cartCartListView.getSelectionModel().getSelectedItem());
+            }
+
+            commentWindow.getCommentRatingSlider().setDisable(true);
+            commentWindow.getCommentHeaderText().setText("Reply");
+            commentWindow.getCommentRatingText().setText("Reply to comment");
+
+            updateCommentTreeView();
+            Scene commentScene = new Scene(parent);
+            Stage commentStage = new Stage();
+            commentStage.setTitle("Reply");
+            commentStage.setScene(commentScene);
+            commentStage.show();
+        } catch (Exception comErr) {
+            comErr.printStackTrace();
+        }
     }
 
     public void onUpdateCommentMenuItemClick () {

@@ -13,7 +13,7 @@
       <TextField fx:id="commentTitleTextField" layoutX="23.0" layoutY="190.0" prefHeight="26.0" prefWidth="288.0" promptText="Title" />
       <Slider fx:id="commentRatingSlider" blockIncrement="1.0" layoutX="23.0" layoutY="102.0" majorTickUnit="1.0" max="5.0" minorTickCount="0" prefHeight="38.0" prefWidth="288.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
       <TextArea fx:id="commentTextArea" layoutX="22.0" layoutY="227.0" prefHeight="312.0" prefWidth="288.0" promptText="How did you like our product?" />
-      <Button fx:id="commentCommentButton" layoutX="126.0" layoutY="547.0" mnemonicParsing="false" onAction="#onCommentCommentButtonClick" prefHeight="38.0" prefWidth="80.0" text="Comment" />
+      <Button fx:id="commentCommentButton" layoutX="126.0" layoutY="547.0" mnemonicParsing="false" onAction="#addComment" prefHeight="38.0" prefWidth="80.0" text="Comment" />
       <Text fx:id="commentHeaderText" layoutX="24.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Leave us a review" textAlignment="CENTER" wrappingWidth="288.0">
          <font>
             <Font size="32.0" />

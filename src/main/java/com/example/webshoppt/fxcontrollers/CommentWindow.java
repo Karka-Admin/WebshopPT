@@ -45,7 +45,7 @@ public class CommentWindow implements Initializable {
         this.product = product;
     }
 
-    public void onCommentCommentButtonClick() {
+    public void addComment() {
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.openConnection();
 
