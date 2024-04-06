@@ -57,27 +57,4 @@ public class DatabaseManager {
             errors.printStackTrace();
         }
     }
-
-    public void printProductQuery() {
-        try {
-            while (resultSet.next()) {
-                System.out.println(
-                        Integer.toString(resultSet.getInt(1)) +
-                        Integer.toString(resultSet.getInt(2)) +
-                        Float.toString(resultSet.getFloat(3)) +
-                        Float.toString(resultSet.getFloat(4)) +
-                        resultSet.getString(5) +
-                        resultSet.getString(6) +
-                        resultSet.getString(7) +
-                        resultSet.getString(8) +
-                        resultSet.getString(9) +
-                        Integer.toString(resultSet.getInt(10)) +
-                        resultSet.getString(11) +
-                        resultSet.getString(12)
-                        );
-            }
-        } catch (Exception errors) {
-            errors.printStackTrace();
-        }
-    }
 }

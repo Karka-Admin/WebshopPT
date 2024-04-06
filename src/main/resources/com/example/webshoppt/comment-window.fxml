@@ -8,19 +8,18 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.webshoppt.fxcontrollers.CommentWindow">
    <children>
       <TextField fx:id="commentTitleTextField" layoutX="23.0" layoutY="190.0" prefHeight="26.0" prefWidth="288.0" promptText="Title" />
       <Slider fx:id="commentRatingSlider" blockIncrement="1.0" layoutX="23.0" layoutY="102.0" majorTickUnit="1.0" max="5.0" minorTickCount="0" prefHeight="38.0" prefWidth="288.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
       <TextArea fx:id="commentTextArea" layoutX="22.0" layoutY="227.0" prefHeight="312.0" prefWidth="288.0" promptText="How did you like our product?" />
-      <Button fx:id="commentCommentButton" layoutX="126.0" layoutY="547.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="80.0" text="Comment" />
-      <Text layoutX="24.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Leave us a review" textAlignment="CENTER" wrappingWidth="288.0">
+      <Button fx:id="commentCommentButton" layoutX="126.0" layoutY="547.0" mnemonicParsing="false" onAction="#onCommentCommentButtonClick" prefHeight="38.0" prefWidth="80.0" text="Comment" />
+      <Text fx:id="commentHeaderText" layoutX="24.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Leave us a review" textAlignment="CENTER" wrappingWidth="288.0">
          <font>
             <Font size="32.0" />
          </font>
       </Text>
-      <Text layoutX="122.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rating" textAlignment="CENTER" wrappingWidth="92.684326171875">
+      <Text fx:id="commentRatingText" layoutX="122.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rating" textAlignment="CENTER" wrappingWidth="92.684326171875">
          <font>
             <Font size="16.0" />
          </font>

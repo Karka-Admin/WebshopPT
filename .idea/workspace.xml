@@ -5,10 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80c69551-48a8-4031-a496-e8abd95b5a81" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/CommentWindow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/comment-window.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/OrderStatus.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/CommentWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/CommentWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/MainWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Cart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Cart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Comment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/utils/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/utils/DatabaseManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/comment-window.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/comment-window.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/main-window.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/main-window.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -19,9 +26,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="FxmlFile" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -52,34 +59,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Karka/Downloads/JavaSpring-main(1)/JavaSpring-main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.4091954&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
-    &quot;settings.editor.splitter.proportion&quot;: &quot;0.28134558&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.HelloApplication.executor": "Run",
+    "Application.Main.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Karka/AppData/Local/SceneBuilder/SceneBuilder.exe",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.4091954",
+    "settings.editor.selected.configurable": "Errors",
+    "settings.editor.splitter.proportion": "0.28134558",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Karka\Documents\GitHub\WebshopPT" />
@@ -92,7 +99,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
       </set>
     </attachedChunks>
   </component>
@@ -130,6 +138,11 @@
       <workItem from="1711985851311" duration="1617000" />
       <workItem from="1711988520873" duration="21278000" />
       <workItem from="1712016495534" duration="6079000" />
+      <workItem from="1712130759109" duration="415000" />
+      <workItem from="1712131190484" duration="14000" />
+      <workItem from="1712330879006" duration="1170000" />
+      <workItem from="1712332365315" duration="8246000" />
+      <workItem from="1712343463449" duration="16888000" />
     </task>
     <servers />
   </component>

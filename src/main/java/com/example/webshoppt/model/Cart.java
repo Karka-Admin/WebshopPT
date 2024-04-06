@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 public class Cart {
     private int id;
+    private int chatId;
     private List<Product> cartItems;
     private List<Comment> messages;
 }

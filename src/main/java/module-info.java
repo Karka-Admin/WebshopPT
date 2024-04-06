@@ -6,6 +6,7 @@ module com.example.webshoppt {
     requires lombok;
     requires mysql.connector.j;
     requires java.sql;
+    requires jdk.compiler;
 
     opens com.example.webshoppt.model to javafx.base;
     exports com.example.webshoppt.model;

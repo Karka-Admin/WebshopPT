@@ -3,6 +3,9 @@ package com.example.webshoppt.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 public class Product {
@@ -14,6 +17,7 @@ public class Product {
     protected String brand;
     protected String description;
     protected String category;
+    protected List<Comment> comments;
 
     public Product() {
         this.id = 0;
@@ -24,6 +28,7 @@ public class Product {
         this.brand = null;
         this.description = null;
         this.category = null;
+        this.comments = new ArrayList<>();
     }
 
     public Product(
@@ -34,7 +39,8 @@ public class Product {
             String name,
             String brand,
             String description,
-            String category) {
+            String category,
+            List<Comment> comments) {
         this.id = id;
         this.quantity = quantity;
         this.averageRating = averageRating;
@@ -43,6 +49,7 @@ public class Product {
         this.brand = brand;
         this.description = description;
         this.category = category;
+        this.comments = comments;
     }
 
     @Override
