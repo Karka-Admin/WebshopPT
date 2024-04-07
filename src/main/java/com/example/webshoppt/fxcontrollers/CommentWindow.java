@@ -1,14 +1,12 @@
 package com.example.webshoppt.fxcontrollers;
 
+import com.example.webshoppt.model.Comment;
 import com.example.webshoppt.model.Product;
 import com.example.webshoppt.model.User;
 import com.example.webshoppt.utils.DatabaseManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +20,7 @@ import java.util.ResourceBundle;
 public class CommentWindow implements Initializable {
     private User user;
     private Product product;
+    private Comment comment;
 
     @FXML
     private Slider commentRatingSlider;
@@ -51,14 +50,15 @@ public class CommentWindow implements Initializable {
 
         try {
             PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                    "INSERT INTO comments (PRODUCT_ID, USER_ID, RATING, TITLE, BODY)" +
-                            " VALUES (?, ?, ?, ?, ?)"
+                    "INSERT INTO comments (product_id, parent_id, user_id, rating, title, body)" +
+                            " VALUES (?, ?, ?, ?, ?, ?)"
             );
             preparedStatement.setInt(1, product.getId());
-            preparedStatement.setInt(2, user.getId());
-            preparedStatement.setInt(3, (int) commentRatingSlider.getValue());
-            preparedStatement.setString(4, commentTitleTextField.getText());
-            preparedStatement.setString(5, commentTextArea.getText());
+            preparedStatement.setInt(2, comment.getParentCommentId());
+            preparedStatement.setInt(3, user.getId());
+            preparedStatement.setInt(4, (int) commentRatingSlider.getValue());
+            preparedStatement.setString(5, commentTitleTextField.getText());
+            preparedStatement.setString(6, commentTextArea.getText());
             databaseManager.sendPreparedStatementQuery(preparedStatement);
 
         } catch (Exception commErr) {
