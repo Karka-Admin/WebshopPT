@@ -322,16 +322,16 @@ public class MainWindow implements Initializable {
             Parent parent = (Parent) fxmlLoader.load();
             CommentWindow commentWindow = fxmlLoader.getController();
 
-            if (admin != null) {
-                commentWindow.initData(admin,
-                        cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue());
-            } else if (manager != null) {
-                commentWindow.initData(manager,
-                        cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue());
-            } else if (customer != null) {
-                commentWindow.initData(customer,
-                        cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue());
-            }
+//            if (admin != null) {
+//                commentWindow.initData(admin,
+//                        cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue());
+//            } else if (manager != null) {
+//                commentWindow.initData(manager,
+//                        cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue());
+//            } else if (customer != null) {
+//                commentWindow.initData(customer,
+//                        cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue());
+//            }
 
             commentWindow.getCommentRatingSlider().setDisable(true);
             commentWindow.getCommentHeaderText().setText("Reply");
