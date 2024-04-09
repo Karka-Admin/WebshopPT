@@ -1,6 +1,8 @@
 package com.example.webshoppt.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -8,6 +10,8 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Product {
     protected int id;
     protected int quantity;
@@ -19,42 +23,8 @@ public class Product {
     protected String category;
     protected List<Comment> comments;
 
-    public Product() {
-        this.id = 0;
-        this.quantity = 0;
-        this.averageRating = 0.0F;
-        this.price = 0.0F;
-        this.name = null;
-        this.brand = null;
-        this.description = null;
-        this.category = null;
-        this.comments = new ArrayList<>();
-    }
-
-    public Product(
-            int id,
-            int quantity,
-            float averageRating,
-            float price,
-            String name,
-            String brand,
-            String description,
-            String category,
-            List<Comment> comments) {
-        this.id = id;
-        this.quantity = quantity;
-        this.averageRating = averageRating;
-        this.price = price;
-        this.name = name;
-        this.brand = brand;
-        this.description = description;
-        this.category = category;
-        this.comments = comments;
-    }
-
     @Override
     public String toString() {
-        return Integer.toString(id) + "\t|\t" + name + " | " + Float.toString(price) + " | "
-                + Integer.toString(quantity);
+        return id + "\t|\t" + name + " | " + price + " | " + quantity;
     }
 }

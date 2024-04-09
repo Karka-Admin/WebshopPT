@@ -9,7 +9,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.webshoppt.fxcontrollers.LoginWindow">
    <children>
-      <Text layoutX="133.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Karka's Hair Product Shop" textAlignment="CENTER" wrappingWidth="373.13671875">
+      <Text layoutX="133.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Webshoppt" textAlignment="CENTER" wrappingWidth="373.13671875">
          <font>
             <Font size="29.0" />
          </font>

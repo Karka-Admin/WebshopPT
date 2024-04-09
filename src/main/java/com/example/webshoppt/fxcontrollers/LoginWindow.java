@@ -4,7 +4,7 @@ import com.example.webshoppt.Main;
 import com.example.webshoppt.model.Admin;
 import com.example.webshoppt.model.Customer;
 import com.example.webshoppt.model.Manager;
-import com.example.webshoppt.model.User;
+import com.example.webshoppt.utils.AlertManager;
 import com.example.webshoppt.utils.DatabaseManager;
 import com.example.webshoppt.utils.PasswordManager;
 import javafx.fxml.FXML;
@@ -14,7 +14,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.shape.CubicCurveTo;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -46,18 +45,17 @@ public class LoginWindow {
         databaseManager.openConnection();
 
         if (loginEmailTextField.getText().trim().isEmpty() || loginPasswordPasswordField.getText().trim().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Login failed.");
-            alert.setHeaderText("Login failed.");
-            alert.setContentText("Missing information.");
-            alert.showAndWait();
+            AlertManager.displayAlert("Login unsuccessful", "Login failed",
+                    "Missing information", Alert.AlertType.ERROR);
             return;
         }
 
         try {
             databaseManager.sendStatementQuery("SELECT * FROM users");
             ResultSet resultSet = databaseManager.getResultSet();
+
             boolean loginSuccessfull = false;
+
             while(resultSet.next()) {
                 if (loginEmailTextField.getText().equals(resultSet.getString("email")) &&
                         PasswordManager.validatePassword(loginPasswordPasswordField.getText(), resultSet.getString("password"))) {
@@ -66,7 +64,7 @@ public class LoginWindow {
                     FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main-window.fxml"));
                     Scene mainScene = new Scene(fxmlLoader.load(), 1280, 800);
                     Stage mainStage = new Stage();
-                    mainStage.setTitle("Karka's Hair Product Shop");
+                    mainStage.setTitle("Webshoppt");
                     mainStage.setScene(mainScene);
                     mainStage.show();
 
@@ -113,11 +111,8 @@ public class LoginWindow {
             }
 
             if (!loginSuccessfull) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Bad credentials.");
-                alert.setHeaderText("Login failed.");
-                alert.setContentText("Email/Password incorrect.");
-                alert.showAndWait();
+                AlertManager.displayAlert("Login unsuccessful", "Login failed",
+                        "Email/Password incorrect", Alert.AlertType.ERROR);
             }
         } catch (Exception loginErr) {
             loginErr.printStackTrace();
@@ -135,16 +130,14 @@ public class LoginWindow {
                 loginNameTextField.getText().trim().isEmpty() ||
                 loginSurnameTextField.getText().trim().isEmpty() ||
                 loginPasswordPasswordField.getText().trim().isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Registration unsuccsessful.");
-                alert.setHeaderText("Registration unsuccessful.");
-                alert.setContentText("Missing information.");
-                alert.showAndWait();
+                AlertManager.displayAlert("Registration unsuccessful", "Registration failed",
+                        "Missing information", Alert.AlertType.ERROR);
                 return;
             }
 
             if (!loginEmailTextField.getText().matches("\\w+@\\w+[.]{1}\\w+")) {
-                loginLogText.setText("Bad email address");
+                AlertManager.displayAlert("Registration unsuccessful", "Registration failed",
+                        "Bad email address", Alert.AlertType.ERROR);
                 return;
             }
 
@@ -153,11 +146,8 @@ public class LoginWindow {
 
             ResultSet resultSet = databaseManager.getResultSet();
             if (resultSet.next()) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Registration unsuccsessful.");
-                alert.setHeaderText("Registration unsuccessful.");
-                alert.setContentText("Email already registered.");
-                alert.showAndWait();
+                AlertManager.displayAlert("Registration unsuccessful", "Registration failed",
+                        "Email already registered", Alert.AlertType.ERROR);
                 return;
             }
 
@@ -173,11 +163,9 @@ public class LoginWindow {
             preparedStatement.setInt(5, 0);
             databaseManager.sendPreparedStatementQuery(preparedStatement);
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Registration successful.");
-            alert.setHeaderText("Success.");
-            alert.setContentText("Registration successful, please login.");
-            alert.showAndWait();
+            AlertManager.displayAlert("Registration successful", "Success",
+                    "Registration successfull, please login", Alert.AlertType.INFORMATION);
+
         } catch (Exception regsiterErr) {
             regsiterErr.printStackTrace();
         } finally {

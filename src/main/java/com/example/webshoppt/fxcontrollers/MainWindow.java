@@ -2,6 +2,7 @@ package com.example.webshoppt.fxcontrollers;
 
 import com.example.webshoppt.Main;
 import com.example.webshoppt.model.*;
+import com.example.webshoppt.utils.AlertManager;
 import com.example.webshoppt.utils.DatabaseManager;
 import com.example.webshoppt.utils.PasswordManager;
 import javafx.collections.FXCollections;
@@ -114,13 +115,13 @@ public class MainWindow implements Initializable {
     @FXML
     private TextArea productDescriptionTextArea;
     @FXML
+    private TextArea productCompositionTextArea;
+    @FXML
     private TextField productPriceTextField;
     @FXML
     private TextField productQuantityTextField;
     @FXML
     private TextField productCapacityTextField;
-    @FXML
-    private TextField productCompositionTextField;
     @FXML
     private TextField productTypeTextField;
     @FXML
@@ -166,6 +167,7 @@ public class MainWindow implements Initializable {
     @FXML
     private MenuItem ordersDeleteOrderMenuItem;
 
+    // GENERAL FUNCTIONS
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         updateUsersTableView();
@@ -198,17 +200,14 @@ public class MainWindow implements Initializable {
     }
 
     public void initShippingInformation(Customer customer) {
-        if (customer == null)
-        {
-            return;
-        }
+        if (customer == null) { return; }
 
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.openConnection();
 
         try {
             databaseManager.sendStatementQuery("SELECT * FROM addresses WHERE user_id = '"
-                    + Integer.toString(customer.getId()) + "'");
+                    + customer.getId() + "'");
             ResultSet resultSet = databaseManager.getResultSet();
             while (resultSet.next()) {
                 customer.setShippingAddress(new Address(
@@ -223,7 +222,7 @@ public class MainWindow implements Initializable {
             }
 
             databaseManager.sendStatementQuery("SELECT * FROM cards WHERE user_id = '" +
-                    Integer.toString(customer.getId()) + "'");
+                    customer.getId() + "'");
             resultSet = databaseManager.getResultSet();
             while (resultSet.next()) {
                 customer.setCard(new Card(
@@ -255,6 +254,8 @@ public class MainWindow implements Initializable {
         }
     }
 
+    // SHOP FUNCTIONS
+    // CART FUNCTIONS
     public void onAddCommentMenuItemClick() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
@@ -412,101 +413,6 @@ public class MainWindow implements Initializable {
         }
     }
 
-    public void onOrdersUpdateOrderStatusMenuItemClick() {
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.openConnection();
-
-        try {
-            ArrayList<String> choices = new ArrayList<>();
-            choices.add(OrderStatus.UNASSIGNED.toString());
-            choices.add(OrderStatus.COLLECTING.toString());
-            choices.add(OrderStatus.SHIPPING.toString());
-            choices.add(OrderStatus.DELIVERED.toString());
-
-            ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.getFirst(), choices);
-            dialog.setTitle("Choose status.");
-            dialog.setHeaderText("Change order status.");
-            dialog.setContentText("Status:");
-
-            Optional<String> result = dialog.showAndWait();
-            if (result.isPresent()) {
-                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                        "UPDATE orders SET order_status = ? WHERE order_id = ?"
-                );
-                preparedStatement.setInt(1, OrderStatus.valueOf(result.get()).ordinal());
-                preparedStatement.setInt(2, ordersListView.getSelectionModel().getSelectedItem().getId());
-                databaseManager.sendPreparedStatementQuery(preparedStatement);
-                updateOrderListView();
-            }
-        } catch (Exception orderUpErr) {
-            orderUpErr.printStackTrace();
-        } finally {
-            databaseManager.closeConnection();
-        }
-    }
-
-    public void onOrdersRefreshMenuItemClick() {
-        updateOrderListView();
-    }
-
-    public void onOrdersAssignManagerMenuItemClick() {
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.openConnection();
-
-        try {
-            databaseManager.sendStatementQuery("SELECT user_id FROM users WHERE account_type = 1");
-            ResultSet resultSet = databaseManager.getResultSet();
-
-            ArrayList<String> choices = new ArrayList<>();
-            while (resultSet.next()) {
-                choices.add(Integer.toString(resultSet.getInt("user_id")));
-            }
-
-            ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.getFirst(), choices);
-            dialog.setTitle("Choose manager.");
-            dialog.setHeaderText("Assign a manager.");
-            dialog.setContentText("Manager:");
-
-            Optional<String> result = dialog.showAndWait();
-            if (result.isPresent()){
-                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                        "UPDATE orders SET assigned_manager_id = ?, order_status = ? WHERE order_id = ?"
-                );
-                preparedStatement.setInt(1, Integer.parseInt(result.get()));
-                preparedStatement.setInt(2, 1);
-                preparedStatement.setInt(3, ordersListView.getSelectionModel().getSelectedItem().getId());
-                databaseManager.sendPreparedStatementQuery(preparedStatement);
-                updateOrderListView();
-            }
-        } catch (Exception assErr) {
-            assErr.printStackTrace();
-        } finally {
-            databaseManager.closeConnection();
-        }
-
-    }
-
-    public void onOrdersDeleteOrderMenuItemClick() {
-        if (ordersListView.getSelectionModel().getSelectedItem().getOrderStatus() == OrderStatus.UNASSIGNED)
-        {
-            DatabaseManager databaseManager = new DatabaseManager();
-            databaseManager.openConnection();
-
-            try {
-                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                        "DELETE FROM orders WHERE cart_id = ?"
-                );
-                preparedStatement.setInt(1, ordersListView.getSelectionModel().getSelectedItem().getId());
-                databaseManager.sendPreparedStatementQuery(preparedStatement);
-                updateOrderListView();
-            } catch (Exception delErr) {
-                delErr.printStackTrace();
-            } finally {
-                databaseManager.closeConnection();
-            }
-        }
-    }
-
     public void onSaveCartButtonClick() {
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.openConnection();
@@ -527,11 +433,11 @@ public class MainWindow implements Initializable {
                     preparedStatement.setInt(2, manager.getId());
                 }
 
-                String itemIdList = "";
+                StringBuilder itemIdList = new StringBuilder();
                 for (Product product : cartCartListView.getItems()) {
-                    itemIdList += Integer.toString(product.getId()) + ";";
+                    itemIdList.append(product.getId()).append(";");
                 }
-                preparedStatement.setString(1, itemIdList);
+                preparedStatement.setString(1, itemIdList.toString());
 
                 databaseManager.sendPreparedStatementQuery(preparedStatement);
             } else {
@@ -547,11 +453,11 @@ public class MainWindow implements Initializable {
                     preparedStatement.setInt(1, manager.getId());
                 }
 
-                String itemIdList = "";
+                StringBuilder itemIdList = new StringBuilder();
                 for (Product product : cartCartListView.getItems()) {
-                    itemIdList += Integer.toString(product.getId()) + ";";
+                    itemIdList.append(product.getId()).append(";");
                 }
-                preparedStatement.setString(2, itemIdList);
+                preparedStatement.setString(2, itemIdList.toString());
 
                 databaseManager.sendPreparedStatementQuery(preparedStatement);
             }
@@ -583,6 +489,441 @@ public class MainWindow implements Initializable {
         }
     }
 
+    public void onCommentMenuItemClick() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
+            Parent parent = (Parent) fxmlLoader.load();
+            CommentWindow commentWindow = fxmlLoader.getController();
+
+            if (admin != null) {
+                commentWindow.initData(admin, cartCartListView.getSelectionModel().getSelectedItem());
+            } else if (manager != null) {
+                commentWindow.initData(manager, cartCartListView.getSelectionModel().getSelectedItem());
+            } else if (customer != null) {
+                commentWindow.initData(customer, cartCartListView.getSelectionModel().getSelectedItem());
+            }
+            updateCommentTreeView();
+            Scene commentScene = new Scene(parent);
+            Stage commentStage = new Stage();
+            commentStage.setTitle("Comment");
+            commentStage.setScene(commentScene);
+            commentStage.show();
+        } catch (Exception comErr) {
+            comErr.printStackTrace();
+        }
+    }
+
+    public void onAddToCartButtonClick() {
+        Product product = (Product) shopProductsListView.getSelectionModel().getSelectedItem();
+
+        if (!shopQuantityTextField.getText().trim().isEmpty() && Integer.parseInt(shopQuantityTextField.getText()) > 0
+                && product.getQuantity() >= Integer.parseInt(shopQuantityTextField.getText())) {
+            //product.setQuantity(product.getQuantity() - Integer.parseInt(shopQuantityTextField.getText()));
+
+            DatabaseManager databaseManager = new DatabaseManager();
+            databaseManager.openConnection();
+            try {
+                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                        "UPDATE products SET quantity = ? WHERE product_id = ?"
+                );
+                preparedStatement.setInt(1, product.getQuantity()
+                        - Integer.parseInt(shopQuantityTextField.getText()));
+                preparedStatement.setInt(2, product.getId());
+                databaseManager.sendPreparedStatementQuery(preparedStatement);
+            } catch (Exception addCartErr) {
+                addCartErr.printStackTrace();
+            } finally {
+                databaseManager.closeConnection();
+            }
+            product.setQuantity(Integer.parseInt(shopQuantityTextField.getText()));
+            cartCartListView.getItems().add(product);
+            updateProductListView(shopProductsListView);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Bad quantity value.");
+            alert.setHeaderText("Adding to cart failed.");
+            alert.setContentText("Invalid quantity value.");
+            alert.showAndWait();
+        }
+    }
+
+    public void updateCommentTreeView() {
+
+    }
+
+//    public void updateCartListView(User activeUser) {
+//        DatabaseManager databaseManager = new DatabaseManager();
+//        databaseManager.openConnection();
+//
+//        try {
+//            databaseManager.sendStatementQuery("SELECT * FROM carts WHERE user_id = '" + activeUser.getId() + "'");
+//            ResultSet resultSet = databaseManager.getResultSet();
+//            while(resultSet.next()) {
+//                String[] resArr = resultSet.getString("ITEM_IDS").split(";");
+//
+//                for (String itemId : resArr) {
+//
+//                    databaseManager.sendStatementQuery("SELECT * FROM carts WHERE item_id = '" + itemId + "'");
+//
+//                    Product product = new Product(
+//
+//                    );
+//                }
+//            }
+//        } catch (Exception upCarErr) {
+//            upCarErr.printStackTrace();
+//        } finally {
+//            databaseManager.closeConnection();
+//        }
+//    }
+
+    // WAREHOUSE FUNCTIONS
+    public void updateProductListView(ListView<Product> listView) {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+        databaseManager.sendStatementQuery("SELECT * FROM products");
+        ResultSet results = databaseManager.getResultSet();
+        listView.getItems().clear();
+        try {
+            while (results.next()) {
+                if (results.getString(9).equals("Liquid")) {
+                    Liquid liquid = new Liquid(
+                            results.getInt(1),      // id
+                            results.getInt(2),      // quantity
+                            results.getFloat(3),    // averageRating
+                            results.getFloat(4),    // price
+                            results.getString(5),   // name
+                            results.getString(6),   // brand
+                            results.getString(7),   // description
+                            results.getString(8),   // category
+                            results.getInt(10),     // capacity
+                            results.getString(11),  // composition
+                            results.getString(12)   // type
+                    );
+                    listView.getItems().add(liquid);
+                } else if (results.getString(9).equals("Tool")) {
+                    Tool tool = new Tool(
+                            results.getInt(1),      // id
+                            results.getInt(2),      // quantity
+                            results.getFloat(3),    // averageRating
+                            results.getFloat(4),    // price
+                            results.getString(5),   // name
+                            results.getString(6),   // brand
+                            results.getString(7),   // description
+                            results.getString(8),   // category
+                            results.getString(12)   // type
+                    );
+                    listView.getItems().add(tool);
+                } else if (results.getString(9).equals("Hairdye")) {
+                    HairDye hairDye = new HairDye(
+                            results.getInt(1),      // id
+                            results.getInt(2),      // quantity
+                            results.getFloat(3),    // averageRating
+                            results.getFloat(4),    // price
+                            results.getString(5),   // name
+                            results.getString(6),   // brand
+                            results.getString(7),   // description
+                            results.getString(8),   // category
+                            results.getInt(10),     // capacity
+                            results.getString(11),  // composition
+                            results.getString(12),  // type
+                            results.getString(13)   // color
+                    );
+                    listView.getItems().add(hairDye);
+                }
+            }
+        } catch (Exception resultErr) {
+            resultErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
+        }
+    }
+
+    public void onAddButtonClick() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        if (productLiquidRadioButton.isSelected()) {
+            try {
+                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                        "INSERT INTO products" +
+                                "(quantity, price, name, brand, description, category, product_type, capacity, " +
+                                "composition, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                );
+                preparedStatement.setInt(1, Integer.parseInt(productQuantityTextField.getText()));
+                preparedStatement.setFloat(2, Float.parseFloat(productPriceTextField.getText()));
+                preparedStatement.setString(3, productNameTextField.getText());
+                preparedStatement.setString(4, productBrandTextField.getText());
+                preparedStatement.setString(5, productDescriptionTextArea.getText());
+                preparedStatement.setString(6, productCategoryTextField.getText());
+                preparedStatement.setString(7, "Liquid");
+                preparedStatement.setInt(8, Integer.parseInt(productCapacityTextField.getText()));
+                preparedStatement.setString(9, productCompositionTextArea.getText());
+                preparedStatement.setString(10, productTypeTextField.getText());
+                databaseManager.sendPreparedStatementQuery(preparedStatement);
+            } catch (Exception prepErr) {
+                AlertManager.displayAlert("Adding unsuccessful", "Adding failed",
+                        "Check information fields", Alert.AlertType.ERROR);
+            }
+        } else if (productHairDyeRadioButton.isSelected()) {
+            try {
+                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                        "INSERT INTO products" +
+                                "(quantity, price, name, brand, description, category, product_type, capacity, " +
+                                "composition, type, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                );
+                preparedStatement.setInt(1, Integer.parseInt(productQuantityTextField.getText()));
+                preparedStatement.setFloat(2, Float.parseFloat(productPriceTextField.getText()));
+                preparedStatement.setString(3, productNameTextField.getText());
+                preparedStatement.setString(4, productBrandTextField.getText());
+                preparedStatement.setString(5, productDescriptionTextArea.getText());
+                preparedStatement.setString(6, productCategoryTextField.getText());
+                preparedStatement.setString(7, "Hairdye");
+                preparedStatement.setInt(8, Integer.parseInt(productCapacityTextField.getText()));
+                preparedStatement.setString(9, productCompositionTextArea.getText());
+                preparedStatement.setString(10, productTypeTextField.getText());
+                preparedStatement.setString(11, productColorTextField.getText());
+                databaseManager.sendPreparedStatementQuery(preparedStatement);
+            } catch (Exception prepErr) {
+                AlertManager.displayAlert("Adding unsuccessful", "Adding failed",
+                        "Check information fields", Alert.AlertType.ERROR);
+            }
+        } else if (productToolRadioButton.isSelected()) {
+            try {
+                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                        "INSERT INTO products" +
+                                "(quantity, price, name, brand, description, category, product_type, type)" +
+                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+                );
+                preparedStatement.setInt(1, Integer.parseInt(productQuantityTextField.getText()));
+                preparedStatement.setFloat(2, Float.parseFloat(productPriceTextField.getText()));
+                preparedStatement.setString(3, productNameTextField.getText());
+                preparedStatement.setString(4, productBrandTextField.getText());
+                preparedStatement.setString(5, productDescriptionTextArea.getText());
+                preparedStatement.setString(6, productCategoryTextField.getText());
+                preparedStatement.setString(7, "Tool");
+                preparedStatement.setString(8, productTypeTextField.getText());
+                databaseManager.sendPreparedStatementQuery(preparedStatement);
+            } catch (Exception prepErr) {
+                AlertManager.displayAlert("Adding unsuccessful", "Adding failed",
+                        "Check information fields", Alert.AlertType.ERROR);
+            }
+        } else {
+            AlertManager.displayAlert("Adding unsuccessful", "Adding failed",
+                    "Product class not selected", Alert.AlertType.ERROR);
+        }
+        updateProductListView(productListView);
+        databaseManager.closeConnection();
+    }
+
+    public void onLiquidRadioButtonClick() {
+        productColorTextField.setDisable(true);
+        productCapacityTextField.setDisable(false);
+        productCompositionTextArea.setDisable(false);
+        productTypeTextField.setDisable(false);
+        productHairDyeRadioButton.setSelected(false);
+        productToolRadioButton.setSelected(false);
+    }
+
+    public void onHairDyeRadioButtonClick() {
+        productColorTextField.setDisable(false);
+        productCapacityTextField.setDisable(false);
+        productCompositionTextArea.setDisable(false);
+        productTypeTextField.setDisable(false);
+        productLiquidRadioButton.setSelected(false);
+        productToolRadioButton.setSelected(false);
+    }
+
+    public void onToolRadioButtonClick() {
+        productColorTextField.setDisable(true);
+        productCapacityTextField.setDisable(true);
+        productCompositionTextArea.setDisable(true);
+        productTypeTextField.setDisable(false);
+        productLiquidRadioButton.setSelected(false);
+        productHairDyeRadioButton.setSelected(false);
+    }
+
+    public void onUpdateButtonClick() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        try {
+            Product product = productListView.getSelectionModel().getSelectedItem();
+            if (product instanceof HairDye) {
+                if (!productHairDyeRadioButton.isSelected()) {
+                    AlertManager.displayAlert("Update unsuccessful", "Failed update",
+                            "Wrong product class selected", Alert.AlertType.ERROR);
+                    return;
+                }
+
+                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                        "UPDATE products SET " +
+                                "quantity = ?," +
+                                "price = ?," +
+                                "name = ?," +
+                                "brand = ?," +
+                                "description = ?," +
+                                "category = ?," +
+                                "product_type = ?," +
+                                "capacity = ?," +
+                                "composition = ?," +
+                                "type = ?," +
+                                "color = ?" +
+                                "WHERE product_id = ?"
+                );
+                preparedStatement.setInt(1, Integer.parseInt(productQuantityTextField.getText()));
+                preparedStatement.setFloat(2, Float.parseFloat(productPriceTextField.getText()));
+                preparedStatement.setString(3, productNameTextField.getText());
+                preparedStatement.setString(4, productBrandTextField.getText());
+                preparedStatement.setString(5, productDescriptionTextArea.getText());
+                preparedStatement.setString(6, productCategoryTextField.getText());
+                preparedStatement.setString(7, "Hairdye");
+                preparedStatement.setInt(8, Integer.parseInt(productCapacityTextField.getText()));
+                preparedStatement.setString(9, productCompositionTextArea.getText());
+                preparedStatement.setString(10, productTypeTextField.getText());
+                preparedStatement.setString(11, productColorTextField.getText());
+                preparedStatement.setInt(12, product.getId());
+                databaseManager.sendPreparedStatementQuery(preparedStatement);
+            } else if (product instanceof Liquid) {
+                if (!productLiquidRadioButton.isSelected()) {
+                    AlertManager.displayAlert("Update unsuccessful", "Failed update",
+                            "Wrong product class selected", Alert.AlertType.ERROR);
+                    return;
+                }
+
+                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                        "UPDATE products SET " +
+                                "quantity = ?," +
+                                "price = ?," +
+                                "name = ?," +
+                                "brand = ?," +
+                                "description = ?," +
+                                "category = ?," +
+                                "product_type = ?," +
+                                "capacity = ?," +
+                                "composition = ?," +
+                                "type = ?" +
+                                "WHERE product_id = ?"
+                );
+                preparedStatement.setInt(1, Integer.parseInt(productQuantityTextField.getText()));
+                preparedStatement.setFloat(2, Float.parseFloat(productPriceTextField.getText()));
+                preparedStatement.setString(3, productNameTextField.getText());
+                preparedStatement.setString(4, productBrandTextField.getText());
+                preparedStatement.setString(5, productDescriptionTextArea.getText());
+                preparedStatement.setString(6, productCategoryTextField.getText());
+                preparedStatement.setString(7, "Liquid");
+                preparedStatement.setInt(8, Integer.parseInt(productCapacityTextField.getText()));
+                preparedStatement.setString(9, productCompositionTextArea.getText());
+                preparedStatement.setString(10, productTypeTextField.getText());
+                preparedStatement.setInt(11, product.getId());
+                databaseManager.sendPreparedStatementQuery(preparedStatement);
+            } else if (product instanceof Tool) {
+                if (!productToolRadioButton.isSelected()) {
+                    AlertManager.displayAlert("Update unsuccessful", "Failed update",
+                            "Wrong product class selected", Alert.AlertType.ERROR);
+                    return;
+                }
+
+                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                        "UPDATE products SET " +
+                                "quantity = ?," +
+                                "price = ?," +
+                                "name = ?," +
+                                "brand = ?," +
+                                "description = ?," +
+                                "category = ?," +
+                                "product_type = ?," +
+                                "type = ?" +
+                                "WHERE product_id = ?"
+                );
+                preparedStatement.setInt(1, Integer.parseInt(productQuantityTextField.getText()));
+                preparedStatement.setFloat(2, Float.parseFloat(productPriceTextField.getText()));
+                preparedStatement.setString(3, productNameTextField.getText());
+                preparedStatement.setString(4, productBrandTextField.getText());
+                preparedStatement.setString(5, productDescriptionTextArea.getText());
+                preparedStatement.setString(6, productCategoryTextField.getText());
+                preparedStatement.setString(7, "Tool");
+                preparedStatement.setString(8, productTypeTextField.getText());
+                preparedStatement.setInt(9, product.getId());
+                databaseManager.sendPreparedStatementQuery(preparedStatement);
+            }
+        } catch (Exception upErr) {
+            upErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
+        }
+    }
+
+    public void onDeleteButtonClick() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        try {
+            Product product = productListView.getSelectionModel().getSelectedItem();
+            PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                    "DELETE FROM products WHERE product_id = ?;"
+            );
+            preparedStatement.setInt(1, product.getId());
+            databaseManager.sendPreparedStatementQuery(preparedStatement);
+            productListView.getItems().remove(product);
+        } catch (Exception delErr) {
+            delErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
+        }
+    }
+
+    public void onRefreshListButtonClick() {
+        updateProductListView(productListView);
+    }
+
+    public void productAutoFillInfo() {
+        Product product = productListView.getSelectionModel().getSelectedItem();
+        if (product == null) { return; }
+
+        if (product instanceof HairDye) {
+            onHairDyeRadioButtonClick();
+            productHairDyeRadioButton.setSelected(true);
+
+            productNameTextField.setText(product.getName());
+            productBrandTextField.setText(product.getBrand());
+            productCategoryTextField.setText(product.getCategory());
+            productDescriptionTextArea.setText(product.getDescription());
+            productTypeTextField.setText(((HairDye) product).getType());
+            productPriceTextField.setText(Float.toString(product.getPrice()));
+            productQuantityTextField.setText(Integer.toString(product.getQuantity()));
+            productCapacityTextField.setText(Integer.toString(((Liquid) product).getCapacity()));
+            productCompositionTextArea.setText(((HairDye) product).getComposition());
+            productColorTextField.setText(((HairDye) product).getComposition());
+
+        } else if (product instanceof Liquid) {
+            onLiquidRadioButtonClick();
+            productLiquidRadioButton.setSelected(true);
+
+            productNameTextField.setText(product.getName());
+            productBrandTextField.setText(product.getBrand());
+            productCategoryTextField.setText(product.getCategory());
+            productDescriptionTextArea.setText(product.getDescription());
+            productTypeTextField.setText(((Liquid) product).getType());
+            productPriceTextField.setText(Float.toString(product.getPrice()));
+            productQuantityTextField.setText(Integer.toString(product.getQuantity()));
+            productCapacityTextField.setText(Integer.toString(((Liquid) product).getCapacity()));
+            productCompositionTextArea.setText(((Liquid) product).getComposition());
+        } else if (product instanceof Tool) {
+            onToolRadioButtonClick();
+            productToolRadioButton.setSelected(true);
+
+            productNameTextField.setText(product.getName());
+            productBrandTextField.setText(product.getBrand());
+            productCategoryTextField.setText(product.getCategory());
+            productDescriptionTextArea.setText(product.getDescription());
+            productTypeTextField.setText(((Tool) product).getType());
+            productPriceTextField.setText(Float.toString(product.getPrice()));
+            productQuantityTextField.setText(Integer.toString(product.getQuantity()));
+        }
+    }
+
+    // USERS FUNCTIONS
     public void onUsersChangePasswordMenuItemClick() {
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.openConnection();
@@ -750,343 +1091,6 @@ public class MainWindow implements Initializable {
         }
     }
 
-    public void onCommentMenuItemClick() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
-            Parent parent = (Parent) fxmlLoader.load();
-            CommentWindow commentWindow = fxmlLoader.getController();
-
-            if (admin != null) {
-                commentWindow.initData(admin, cartCartListView.getSelectionModel().getSelectedItem());
-            } else if (manager != null) {
-                commentWindow.initData(manager, cartCartListView.getSelectionModel().getSelectedItem());
-            } else if (customer != null) {
-                commentWindow.initData(customer, cartCartListView.getSelectionModel().getSelectedItem());
-            }
-            updateCommentTreeView();
-            Scene commentScene = new Scene(parent);
-            Stage commentStage = new Stage();
-            commentStage.setTitle("Comment");
-            commentStage.setScene(commentScene);
-            commentStage.show();
-        } catch (Exception comErr) {
-            comErr.printStackTrace();
-        }
-    }
-
-    public void onAddToCartButtonClick() {
-        Product product = (Product) shopProductsListView.getSelectionModel().getSelectedItem();
-
-        if (!shopQuantityTextField.getText().trim().isEmpty() && Integer.parseInt(shopQuantityTextField.getText()) > 0
-            && product.getQuantity() >= Integer.parseInt(shopQuantityTextField.getText())) {
-            //product.setQuantity(product.getQuantity() - Integer.parseInt(shopQuantityTextField.getText()));
-
-            DatabaseManager databaseManager = new DatabaseManager();
-            databaseManager.openConnection();
-            try {
-                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                        "UPDATE products SET quantity = ? WHERE product_id = ?"
-                );
-                preparedStatement.setInt(1, product.getQuantity()
-                        - Integer.parseInt(shopQuantityTextField.getText()));
-                preparedStatement.setInt(2, product.getId());
-                databaseManager.sendPreparedStatementQuery(preparedStatement);
-            } catch (Exception addCartErr) {
-                addCartErr.printStackTrace();
-            } finally {
-                databaseManager.closeConnection();
-            }
-            product.setQuantity(Integer.parseInt(shopQuantityTextField.getText()));
-            cartCartListView.getItems().add(product);
-            updateProductListView(shopProductsListView);
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Bad quantity value.");
-            alert.setHeaderText("Adding to cart failed.");
-            alert.setContentText("Invalid quantity value.");
-            alert.showAndWait();
-        }
-    }
-
-    public void onAddButtonClick() {
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.openConnection();
-
-        if (productLiquidRadioButton.isSelected()) {
-            try {
-                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                        "INSERT INTO products" +
-                                "(quantity, price, name, brand, description, category, product_type, capacity, " +
-                                "composition, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-                );
-                preparedStatement.setInt(1, Integer.parseInt(productQuantityTextField.getText()));
-                preparedStatement.setFloat(2, Float.parseFloat(productPriceTextField.getText()));
-                preparedStatement.setString(3, productNameTextField.getText());
-                preparedStatement.setString(4, productBrandTextField.getText());
-                preparedStatement.setString(5, productDescriptionTextArea.getText());
-                preparedStatement.setString(6, productCategoryTextField.getText());
-                preparedStatement.setString(7, "Liquid");
-                preparedStatement.setInt(8, Integer.parseInt(productCapacityTextField.getText()));
-                preparedStatement.setString(9, productCompositionTextField.getText());
-                preparedStatement.setString(10, productTypeTextField.getText());
-                databaseManager.sendPreparedStatementQuery(preparedStatement);
-            } catch (Exception prepErr) {
-                prepErr.printStackTrace();
-            }
-        } else if (productHairDyeRadioButton.isSelected()) {
-            try {
-                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                        "INSERT INTO products" +
-                                "(quantity, price, name, brand, description, category, product_type, capacity, " +
-                                "composition, type, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-                );
-                preparedStatement.setInt(1, Integer.parseInt(productQuantityTextField.getText()));
-                preparedStatement.setFloat(2, Float.parseFloat(productPriceTextField.getText()));
-                preparedStatement.setString(3, productNameTextField.getText());
-                preparedStatement.setString(4, productBrandTextField.getText());
-                preparedStatement.setString(5, productDescriptionTextArea.getText());
-                preparedStatement.setString(6, productCategoryTextField.getText());
-                preparedStatement.setString(7, "Hairdye");
-                preparedStatement.setInt(8, Integer.parseInt(productCapacityTextField.getText()));
-                preparedStatement.setString(9, productCompositionTextField.getText());
-                preparedStatement.setString(10, productTypeTextField.getText());
-                preparedStatement.setString(11, productColorTextField.getText());
-                databaseManager.sendPreparedStatementQuery(preparedStatement);
-            } catch (Exception prepErr) {
-                prepErr.printStackTrace();
-            }
-        } else if (productToolRadioButton.isSelected()) {
-            try {
-                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                        "INSERT INTO products" +
-                                "(quantity, price, name, brand, description, category, product_type, type)" +
-                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-                );
-                preparedStatement.setInt(1, Integer.parseInt(productQuantityTextField.getText()));
-                preparedStatement.setFloat(2, Float.parseFloat(productPriceTextField.getText()));
-                preparedStatement.setString(3, productNameTextField.getText());
-                preparedStatement.setString(4, productBrandTextField.getText());
-                preparedStatement.setString(5, productDescriptionTextArea.getText());
-                preparedStatement.setString(6, productCategoryTextField.getText());
-                preparedStatement.setString(7, "Tool");
-                preparedStatement.setString(8, productTypeTextField.getText());
-                databaseManager.sendPreparedStatementQuery(preparedStatement);
-            } catch (Exception prepErr) {
-                prepErr.printStackTrace();
-            }
-        }
-        updateProductListView(productListView);
-        databaseManager.closeConnection();
-    }
-
-    public void onLiquidRadioButtonClick() {
-        productColorTextField.setDisable(true);
-        productCapacityTextField.setDisable(false);
-        productCompositionTextField.setDisable(false);
-        productTypeTextField.setDisable(false);
-        productHairDyeRadioButton.setSelected(false);
-        productToolRadioButton.setSelected(false);
-    }
-
-    public void onHairDyeRadioButtonClick() {
-        productColorTextField.setDisable(false);
-        productCapacityTextField.setDisable(false);
-        productCompositionTextField.setDisable(false);
-        productTypeTextField.setDisable(false);
-        productLiquidRadioButton.setSelected(false);
-        productToolRadioButton.setSelected(false);
-    }
-
-    public void onToolRadioButtonClick() {
-        productColorTextField.setDisable(true);
-        productCapacityTextField.setDisable(true);
-        productCompositionTextField.setDisable(true);
-        productTypeTextField.setDisable(false);
-        productLiquidRadioButton.setSelected(false);
-        productHairDyeRadioButton.setSelected(false);
-    }
-
-    public void onUpdateButtonClick() {
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.openConnection();
-
-        try {
-            Product product = productListView.getSelectionModel().getSelectedItem();
-            if (product instanceof HairDye) {
-                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                        "UPDATE products SET " +
-                             "quantity = ?," +
-                             "price = ?," +
-                             "name = ?," +
-                             "brand = ?," +
-                             "description = ?," +
-                             "category = ?," +
-                             "product_type = ?," +
-                             "capacity = ?," +
-                             "composition = ?," +
-                             "type = ?," +
-                             "color = ?" +
-                             "WHERE product_id = ?"
-                );
-                preparedStatement.setInt(1, Integer.parseInt(productQuantityTextField.getText()));
-                preparedStatement.setFloat(2, Float.parseFloat(productPriceTextField.getText()));
-                preparedStatement.setString(3, productNameTextField.getText());
-                preparedStatement.setString(4, productBrandTextField.getText());
-                preparedStatement.setString(5, productDescriptionTextArea.getText());
-                preparedStatement.setString(6, productCategoryTextField.getText());
-                preparedStatement.setString(7, "Hairdye");
-                preparedStatement.setInt(8, Integer.parseInt(productCapacityTextField.getText()));
-                preparedStatement.setString(9, productCompositionTextField.getText());
-                preparedStatement.setString(10, productTypeTextField.getText());
-                preparedStatement.setString(11, productColorTextField.getText());
-                preparedStatement.setInt(12, product.getId());
-                databaseManager.sendPreparedStatementQuery(preparedStatement);
-            } else if (product instanceof Liquid) {
-                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                        "UPDATE products SET " +
-                                "quantity = ?," +
-                                "price = ?," +
-                                "name = ?," +
-                                "brand = ?," +
-                                "description = ?," +
-                                "category = ?," +
-                                "product_type = ?," +
-                                "capacity = ?," +
-                                "composition = ?," +
-                                "type = ?" +
-                                "WHERE product_id = ?"
-                );
-                preparedStatement.setInt(1, Integer.parseInt(productQuantityTextField.getText()));
-                preparedStatement.setFloat(2, Float.parseFloat(productPriceTextField.getText()));
-                preparedStatement.setString(3, productNameTextField.getText());
-                preparedStatement.setString(4, productBrandTextField.getText());
-                preparedStatement.setString(5, productDescriptionTextArea.getText());
-                preparedStatement.setString(6, productCategoryTextField.getText());
-                preparedStatement.setString(7, "Liquid");
-                preparedStatement.setInt(8, Integer.parseInt(productCapacityTextField.getText()));
-                preparedStatement.setString(9, productCompositionTextField.getText());
-                preparedStatement.setString(10, productTypeTextField.getText());
-                preparedStatement.setInt(11, product.getId());
-                databaseManager.sendPreparedStatementQuery(preparedStatement);
-            } else if (product instanceof Tool) {
-                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                        "UPDATE products SET " +
-                                "quantity = ?," +
-                                "price = ?," +
-                                "name = ?," +
-                                "brand = ?," +
-                                "description = ?," +
-                                "category = ?," +
-                                "product_type = ?," +
-                                "type = ?" +
-                                "WHERE product_id = ?"
-                );
-                preparedStatement.setInt(1, Integer.parseInt(productQuantityTextField.getText()));
-                preparedStatement.setFloat(2, Float.parseFloat(productPriceTextField.getText()));
-                preparedStatement.setString(3, productNameTextField.getText());
-                preparedStatement.setString(4, productBrandTextField.getText());
-                preparedStatement.setString(5, productDescriptionTextArea.getText());
-                preparedStatement.setString(6, productCategoryTextField.getText());
-                preparedStatement.setString(7, "Tool");
-                preparedStatement.setString(8, productTypeTextField.getText());
-                preparedStatement.setInt(9, product.getId());
-                databaseManager.sendPreparedStatementQuery(preparedStatement);
-            }
-        } catch (Exception upErr) {
-            upErr.printStackTrace();
-        } finally {
-            databaseManager.closeConnection();
-        }
-    }
-
-    public void onDeleteButtonClick() {
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.openConnection();
-
-        try {
-            Product product = productListView.getSelectionModel().getSelectedItem();
-            PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                    "DELETE FROM products WHERE product_id = ?;"
-            );
-            preparedStatement.setInt(1, product.getId());
-            databaseManager.sendPreparedStatementQuery(preparedStatement);
-            productListView.getItems().remove(product);
-        } catch (Exception delErr) {
-            delErr.printStackTrace();
-        } finally {
-            databaseManager.closeConnection();
-        }
-    }
-
-    public void onRefreshListButtonClick() {
-        updateProductListView(productListView);
-    }
-
-    public void updateProductListView(ListView<Product> listView) {
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.openConnection();
-        databaseManager.sendStatementQuery("SELECT * FROM products");
-        ResultSet results = databaseManager.getResultSet();
-        listView.getItems().clear();
-        try {
-            while (results.next()) {
-                if (results.getString(9).equals("Liquid")) {
-                    Liquid liquid = new Liquid(
-                            results.getInt(1),      // id
-                            results.getInt(2),      // quantity
-                            results.getFloat(3),    // averageRating
-                            results.getFloat(4),    // price
-                            results.getString(5),   // name
-                            results.getString(6),   // brand
-                            results.getString(7),   // description
-                            results.getString(8),   // category
-                            results.getInt(10),     // capacity
-                            results.getString(11),  // composition
-                            results.getString(12)   // type
-                    );
-                    listView.getItems().add(liquid);
-                } else if (results.getString(9).equals("Tool")) {
-                    Tool tool = new Tool(
-                            results.getInt(1),      // id
-                            results.getInt(2),      // quantity
-                            results.getFloat(3),    // averageRating
-                            results.getFloat(4),    // price
-                            results.getString(5),   // name
-                            results.getString(6),   // brand
-                            results.getString(7),   // description
-                            results.getString(8),   // category
-                            results.getString(12)   // type
-                    );
-                    listView.getItems().add(tool);
-                } else if (results.getString(9).equals("Hairdye")) {
-                    HairDye hairDye = new HairDye(
-                            results.getInt(1),      // id
-                            results.getInt(2),      // quantity
-                            results.getFloat(3),    // averageRating
-                            results.getFloat(4),    // price
-                            results.getString(5),   // name
-                            results.getString(6),   // brand
-                            results.getString(7),   // description
-                            results.getString(8),   // category
-                            results.getInt(10),     // capacity
-                            results.getString(11),  // composition
-                            results.getString(12),  // type
-                            results.getString(13)   // color
-                    );
-                    listView.getItems().add(hairDye);
-                }
-            }
-        } catch (Exception resultErr) {
-            resultErr.printStackTrace();
-        } finally {
-            databaseManager.closeConnection();
-        }
-    }
-
-    public void updateCommentTreeView() {
-
-    }
-
     public void updateUsersTableView() {
         usersIdTableColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         usersEmailTableColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -1104,6 +1108,7 @@ public class MainWindow implements Initializable {
             usersObservableList.clear();
             while (resultSet.next()) {
                 User user = new User();
+
                 user.setId(resultSet.getInt("user_id"));
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
@@ -1121,31 +1126,101 @@ public class MainWindow implements Initializable {
         }
     }
 
-//    public void updateCartListView(User activeUser) {
-//        DatabaseManager databaseManager = new DatabaseManager();
-//        databaseManager.openConnection();
-//
-//        try {
-//            databaseManager.sendStatementQuery("SELECT * FROM carts WHERE user_id = '" + activeUser.getId() + "'");
-//            ResultSet resultSet = databaseManager.getResultSet();
-//            while(resultSet.next()) {
-//                String[] resArr = resultSet.getString("ITEM_IDS").split(";");
-//
-//                for (String itemId : resArr) {
-//
-//                    databaseManager.sendStatementQuery("SELECT * FROM carts WHERE item_id = '" + itemId + "'");
-//
-//                    Product product = new Product(
-//
-//                    );
-//                }
-//            }
-//        } catch (Exception upCarErr) {
-//            upCarErr.printStackTrace();
-//        } finally {
-//            databaseManager.closeConnection();
-//        }
-//    }
+    // ORDERS FUNCTIONS
+    public void onOrdersUpdateOrderStatusMenuItemClick() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        try {
+            ArrayList<String> choices = new ArrayList<>();
+            choices.add(OrderStatus.UNASSIGNED.toString());
+            choices.add(OrderStatus.COLLECTING.toString());
+            choices.add(OrderStatus.SHIPPING.toString());
+            choices.add(OrderStatus.DELIVERED.toString());
+
+            ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.getFirst(), choices);
+            dialog.setTitle("Choose status.");
+            dialog.setHeaderText("Change order status.");
+            dialog.setContentText("Status:");
+
+            Optional<String> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                        "UPDATE orders SET order_status = ? WHERE order_id = ?"
+                );
+                preparedStatement.setInt(1, OrderStatus.valueOf(result.get()).ordinal());
+                preparedStatement.setInt(2, ordersListView.getSelectionModel().getSelectedItem().getId());
+                databaseManager.sendPreparedStatementQuery(preparedStatement);
+                updateOrderListView();
+            }
+        } catch (Exception orderUpErr) {
+            orderUpErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
+        }
+    }
+
+    public void onOrdersRefreshMenuItemClick() {
+        updateOrderListView();
+    }
+
+    public void onOrdersAssignManagerMenuItemClick() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        try {
+            databaseManager.sendStatementQuery("SELECT user_id FROM users WHERE account_type = 1");
+            ResultSet resultSet = databaseManager.getResultSet();
+
+            ArrayList<String> choices = new ArrayList<>();
+            while (resultSet.next()) {
+                choices.add(Integer.toString(resultSet.getInt("user_id")));
+            }
+
+            ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.getFirst(), choices);
+            dialog.setTitle("Choose manager.");
+            dialog.setHeaderText("Assign a manager.");
+            dialog.setContentText("Manager:");
+
+            Optional<String> result = dialog.showAndWait();
+            if (result.isPresent()){
+                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                        "UPDATE orders SET assigned_manager_id = ?, order_status = ? WHERE order_id = ?"
+                );
+                preparedStatement.setInt(1, Integer.parseInt(result.get()));
+                preparedStatement.setInt(2, 1);
+                preparedStatement.setInt(3, ordersListView.getSelectionModel().getSelectedItem().getId());
+                databaseManager.sendPreparedStatementQuery(preparedStatement);
+                updateOrderListView();
+            }
+        } catch (Exception assErr) {
+            assErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
+        }
+
+    }
+
+    public void onOrdersDeleteOrderMenuItemClick() {
+        if (!(ordersListView.getSelectionModel().getSelectedItem().getOrderStatus() == OrderStatus.UNASSIGNED))
+        {
+            DatabaseManager databaseManager = new DatabaseManager();
+            databaseManager.openConnection();
+
+            try {
+                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                        "DELETE FROM orders WHERE cart_id = ?"
+                );
+                preparedStatement.setInt(1, ordersListView.getSelectionModel().getSelectedItem().getId());
+                databaseManager.sendPreparedStatementQuery(preparedStatement);
+                updateOrderListView();
+            } catch (Exception delErr) {
+                delErr.printStackTrace();
+            } finally {
+                databaseManager.closeConnection();
+            }
+        }
+    }
 
     public void updateOrderListView() {
         DatabaseManager databaseManager = new DatabaseManager();
