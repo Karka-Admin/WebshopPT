@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,10 +15,11 @@ public class Order extends Cart {
     private int id;
     private int cartId;
     private int assignedManagerId;
+    private LocalDate orderDate;
     private OrderStatus orderStatus;
 
     @Override
     public String toString() {
-        return id + " | " + cartId + " | " + assignedManagerId + " | " + orderStatus;
+        return id + " | " + cartId + " | " + assignedManagerId + " | " + orderDate + " | " + orderStatus;
     }
 }

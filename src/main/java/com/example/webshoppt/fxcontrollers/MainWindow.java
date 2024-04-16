@@ -16,10 +16,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import lombok.Data;
 
 import java.net.URL;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -59,9 +62,20 @@ public class MainWindow implements Initializable {
     @FXML
     private MenuItem cartCommentMenuItem;
     @FXML
+    private MenuItem cartOrdersViewCommentsMenuItem;
+    @FXML
+    private MenuItem cartOrdersAddCommentMenuItem;
+    @FXML
+    public MenuItem cartDeleteCommentMenuItem;
+    @FXML
     private ListView<Product> cartCartListView;
     @FXML
+    private ListView<Order> cartOrdersListView;
+
+    @FXML
     private TreeView<Comment> cartCommentSectionTreeView;
+    @FXML
+    private Text cartTotalText;
     @FXML
     private TextField cartClientFirstNameTextField;
     @FXML
@@ -150,8 +164,7 @@ public class MainWindow implements Initializable {
     private TableColumn<User, String> usersLastnameTableColumn;
     @FXML
     private TableColumn<User, Integer> usersAccountTypeTableColumn;
-    @FXML
-    private final ObservableList<User> usersObservableList = FXCollections.observableArrayList();
+    private ObservableList<User> usersObservableList = FXCollections.observableArrayList();
 
     // ORDERS TAB ELEMENTS
     @FXML
@@ -159,21 +172,42 @@ public class MainWindow implements Initializable {
     @FXML
     private ListView<Order> ordersListView;
     @FXML
+    private DatePicker ordersFromDatePicker;
+    @FXML
+    private DatePicker ordersToDatePicker;
+    @FXML
+    private TextField ordersFilterMTextField;
+    @FXML
+    private ComboBox<OrderStatus> ordersFilterStatusComboBox;
+    @FXML
+    private Button ordersFilterButton;
+    @FXML
+    private Button ordersClearButton;
+    @FXML
     private MenuItem ordersUpdateOrderStatusMenuItem;
     @FXML
     private MenuItem ordersAssignManagerMenuItem;
-    @FXML
-    private MenuItem ordersAssignYourselfMenuItem;
     @FXML
     private MenuItem ordersDeleteOrderMenuItem;
 
     // GENERAL FUNCTIONS
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        usersTableView.setEditable(true);
+        usersIdTableColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        usersEmailTableColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        usersPasswordTableColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
+        usersFirstnameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        usersLastnameTableColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
+        usersAccountTypeTableColumn.setCellValueFactory(new PropertyValueFactory<>("accountType"));
+
         updateUsersTableView();
         updateProductListView(productListView);
         updateProductListView(shopProductsListView);
         updateOrderListView();
+
+        initFilterComboBox();
+        filterOrders();
     }
 
     public void initUser(User activeUser) {
@@ -192,6 +226,7 @@ public class MainWindow implements Initializable {
         }
         initWelcomeUserText(activeUser);
         initShippingInformation(customer);
+        updateCartOrdersListView();
         //updateCartListView(generalUser);
     }
 
@@ -254,135 +289,192 @@ public class MainWindow implements Initializable {
         }
     }
 
+    public void initFilterComboBox() {
+        ordersFilterStatusComboBox.getItems().setAll(OrderStatus.values());
+    }
+
     // SHOP FUNCTIONS
     // CART FUNCTIONS
-    public void onAddCommentMenuItemClick() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
-            Parent parent = (Parent) fxmlLoader.load();
-            CommentWindow commentWindow = fxmlLoader.getController();
-
-            if (admin != null) {
-                commentWindow.initData(admin, cartCartListView.getSelectionModel().getSelectedItem());
-            } else if (manager != null) {
-                commentWindow.initData(manager, cartCartListView.getSelectionModel().getSelectedItem());
-            } else if (customer != null) {
-                commentWindow.initData(customer, cartCartListView.getSelectionModel().getSelectedItem());
-            }
-
-            commentWindow.getCommentRatingSlider().setDisable(true);
-            commentWindow.getCommentHeaderText().setText("Comment");
-            commentWindow.getCommentRatingText().setText("Leave a comment");
-
-            updateCommentTreeView();
-            Scene commentScene = new Scene(parent);
-            Stage commentStage = new Stage();
-            commentStage.setTitle("Comment");
-            commentStage.setScene(commentScene);
-            commentStage.show();
-        } catch (Exception comErr) {
-            comErr.printStackTrace();
-        }
-    }
-
-    public void onViewChatMenuItemClick() {
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.openConnection();
-
-        try {
-            cartCommentSectionTreeView.setRoot(new TreeItem<>());
-            cartCommentSectionTreeView.setShowRoot(false);
-            cartCommentSectionTreeView.getRoot().setExpanded(true);
-
-            databaseManager.sendStatementQuery("SELECT * FROM comments");
-
-            ResultSet results = databaseManager.getResultSet();
-            while (results.next()) {
-                Comment comment = new Comment(
-                        results.getInt("COMMENT_ID"),
-                        results.getInt("PARENT_ID"),
-                        results.getInt("PRODUCT_ID"),
-                        results.getInt("RATING"),
-                        results.getInt("USER_ID"),
-                        results.getString("TITLE"),
-                        results.getString("BODY"),
-                        results.getDate("DATE").toLocalDate()
-                );
-                cartCommentSectionTreeView.getRoot().getChildren().add(new TreeItem<>(comment));
-            }
-        } catch (Exception treeUpErr) {
-            treeUpErr.printStackTrace();
-        } finally {
-            databaseManager.closeConnection();
-        }
-    }
-
     public void onReplyMenuItemClick() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
             Parent parent = (Parent) fxmlLoader.load();
             CommentWindow commentWindow = fxmlLoader.getController();
-
-//            if (admin != null) {
-//                commentWindow.initData(admin,
-//                        cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue());
-//            } else if (manager != null) {
-//                commentWindow.initData(manager,
-//                        cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue());
-//            } else if (customer != null) {
-//                commentWindow.initData(customer,
-//                        cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue());
-//            }
-
-            commentWindow.getCommentRatingSlider().setDisable(true);
-            commentWindow.getCommentHeaderText().setText("Reply");
-            commentWindow.getCommentRatingText().setText("Reply to comment");
-
-            updateCommentTreeView();
+            commentWindow.initData(generalUser,
+                    cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue(), false);
             Scene commentScene = new Scene(parent);
             Stage commentStage = new Stage();
             commentStage.setTitle("Reply");
             commentStage.setScene(commentScene);
             commentStage.show();
+
+            viewOrderComments();
         } catch (Exception comErr) {
             comErr.printStackTrace();
         }
     }
 
     public void onUpdateCommentMenuItemClick () {
+        if (generalUser.getId() != cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue().getUserId()) {
+            AlertManager.displayAlert("Comment update unsuccessful", "Comment update failed",
+                    "You don't have this permission.", Alert.AlertType.ERROR);
+            return;
+        }
 
-    }
-
-    public void onViewCommentsMenuItemClick() {
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.openConnection();
 
         try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
+            Parent parent = (Parent) fxmlLoader.load();
+            CommentWindow commentWindow = fxmlLoader.getController();
+            commentWindow.initData(generalUser,
+                    cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue(), true);
+            Scene commentScene = new Scene(parent);
+            Stage commentStage = new Stage();
+            commentStage.setTitle("Update");
+            commentStage.setScene(commentScene);
+            commentStage.show();
+
+            viewOrderComments();
+        } catch (Exception oucmicErr) {
+            oucmicErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
+        }
+    }
+
+    public void onDeleteCommentMenuItemClick() {
+        if (generalUser.getId() != cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue().getUserId()) {
+            AlertManager.displayAlert("Comment deletion unsuccessful", "Comment deletion failed",
+                    "You don't have this permission.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        try {
+            PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                    "DELETE FROM comments WHERE comment_id = ?"
+            );
+            preparedStatement.setInt(1,
+                    cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue().getId());
+            databaseManager.sendPreparedStatementQuery(preparedStatement);
+            viewOrderComments();
+        } catch (Exception odcmicErr) {
+            odcmicErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
+        }
+    }
+
+//    public void onViewCommentsMenuItemClick() {
+//        DatabaseManager databaseManager = new DatabaseManager();
+//        databaseManager.openConnection();
+//
+//        try {
+//            cartCommentSectionTreeView.setRoot(new TreeItem<>());
+//            cartCommentSectionTreeView.setShowRoot(false);
+//            cartCommentSectionTreeView.getRoot().setExpanded(true);
+//
+//            databaseManager.sendStatementQuery("SELECT * FROM comments WHERE product_id = '"
+//                    + cartCartListView.getSelectionModel().getSelectedItem().getId() + "'");
+//
+//            ResultSet resultSet = databaseManager.getResultSet();
+//            while (resultSet.next()) {
+//                Comment comment = new Comment(
+//                        resultSet.getInt("comment_id"),
+//                        resultSet.getInt("parent_id"),
+//                        resultSet.getInt("product_id"),
+//                        resultSet.getInt("user_id"),
+//                        resultSet.getInt("chat_id"),
+//                        resultSet.getInt("rating"),
+//                        resultSet.getString("title"),
+//                        resultSet.getString("body"),
+//                        null,
+//                        resultSet.getDate("date").toLocalDate()
+//                );
+//                cartCommentSectionTreeView.getRoot().getChildren().add(new TreeItem<>(comment));
+//            }
+//        } catch (Exception treeUpErr) {
+//            treeUpErr.printStackTrace();
+//        } finally {
+//            databaseManager.closeConnection();
+//        }
+//    }
+
+    public void viewOrderComments() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        try {
+            databaseManager.sendStatementQuery("SELECT * FROM comments WHERE chat_id = '"
+                    + cartOrdersListView.getSelectionModel().getSelectedItem().getId() + "'");
+            ResultSet resultSet = databaseManager.getResultSet();
+            ArrayList<Comment> comments = new ArrayList<>();
+            while (resultSet.next()) {
+                Comment comment = new Comment(
+                        resultSet.getInt("comment_id"),
+                        resultSet.getInt("parent_id"),
+                        resultSet.getInt("product_id"),
+                        resultSet.getInt("user_id"),
+                        resultSet.getInt("chat_id"),
+                        resultSet.getInt("rating"),
+                        resultSet.getString("title"),
+                        resultSet.getString("body"),
+                        null,
+                        resultSet.getDate("date").toLocalDate()
+                );
+                comments.add(comment);
+            }
+
+            for (int i = 0; i < comments.size(); i++) {
+                ArrayList<Comment> replyList = new ArrayList<>();
+                for (int j = 0; j < comments.size(); j++) {
+                    if (comments.get(i).getId() == comments.get(j).getParentId() && i != j) {
+                        replyList.add(comments.get(j));
+                        comments.remove(comments.get(j));
+                    }
+                }
+                comments.get(i).setReplies(replyList);
+            }
+
             cartCommentSectionTreeView.setRoot(new TreeItem<>());
             cartCommentSectionTreeView.setShowRoot(false);
             cartCommentSectionTreeView.getRoot().setExpanded(true);
+            comments.forEach(comment -> addTreeItem(comment, cartCommentSectionTreeView.getRoot()));
 
-            databaseManager.sendStatementQuery("SELECT * FROM comments WHERE product_id = '"
-                    + cartCartListView.getSelectionModel().getSelectedItem().getId() + "'");
-
-            ResultSet results = databaseManager.getResultSet();
-            while (results.next()) {
-                Comment comment = new Comment(
-                        results.getInt("COMMENT_ID"),
-                        results.getInt("PARENT_ID"),
-                        results.getInt("PRODUCT_ID"),
-                        results.getInt("RATING"),
-                        results.getInt("USER_ID"),
-                        results.getString("TITLE"),
-                        results.getString("BODY"),
-                        results.getDate("DATE").toLocalDate()
-                );
-                cartCommentSectionTreeView.getRoot().getChildren().add(new TreeItem<>(comment));
-            }
-        } catch (Exception treeUpErr) {
-            treeUpErr.printStackTrace();
+        } catch(Exception vocErr) {
+            vocErr.printStackTrace();
         } finally {
             databaseManager.closeConnection();
+        }
+    }
+
+    public void addTreeItem(Comment comment, TreeItem<Comment> parentComment) {
+        TreeItem<Comment> treeItem = new TreeItem<>(comment);
+        parentComment.getChildren().add(treeItem);
+        if (comment.getReplies() != null) {
+            comment.getReplies().forEach(sub -> addTreeItem(sub, treeItem));
+        }
+    }
+
+    public void addOrderComment() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
+            Parent parent = (Parent) fxmlLoader.load();
+            CommentWindow commentWindow = fxmlLoader.getController();
+            commentWindow.initData(generalUser, cartOrdersListView.getSelectionModel().getSelectedItem());
+            Scene commentScene = new Scene(parent);
+            Stage commentStage = new Stage();
+            commentStage.setTitle("Comment");
+            commentStage.setScene(commentScene);
+            commentStage.show();
+
+            viewOrderComments();
+        } catch (Exception comErr) {
+            comErr.printStackTrace();
         }
     }
 
@@ -392,22 +484,74 @@ public class MainWindow implements Initializable {
 
         try {
             PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                    "INSERT INTO orders (CART_ID, ORDER_STATUS) VALUES (?, ?)"
+                    "INSERT INTO orders (cart_id, order_date) VALUES (?, ?)"
             );
             databaseManager.sendStatementQuery("SELECT * FROM carts WHERE customer_id = '" + generalUser.getId() + "'");
             ResultSet resultSet = databaseManager.getResultSet();
 
             if (resultSet.next()) {
                 preparedStatement.setInt(1, resultSet.getInt("cart_id"));
-                preparedStatement.setInt(2, 0);
+                preparedStatement.setDate(2, Date.valueOf(LocalDate.now()));
             } else {
                 onSaveCartButtonClick();
+            }
+
+            if (cartClientFirstNameTextField.getText().isEmpty() ||
+                    cartClientLastNameTextField.getText().isEmpty() ||
+                    cartStreetAddressTextField.getText().isEmpty() ||
+                    cartSecondaryStreetAddressTextField.getText().isEmpty() ||
+                    cartCityTextField.getText().isEmpty() ||
+                    cartPostalCodeTextField.getText().isEmpty() ||
+                    cartBirthDateDatePicker.getValue() == null) {
+                AlertManager.displayAlert("Order unsuccessfull", "Order failed.",
+                        "Missing client information.", Alert.AlertType.ERROR);
+            }
+
+            if (cartCardFirstNameTextField.getText().isEmpty() ||
+                    cartCardLastNameTextField.getText().isEmpty() ||
+                    cartCardNumberTextField.getText().isEmpty() ||
+                    cartCVCTextField.getText().isEmpty() ||
+                    cartExpirationDateDatePicker.getValue() == null) {
+                AlertManager.displayAlert("Order unsuccessfull", "Order failed.",
+                        "Missing card information.", Alert.AlertType.ERROR);
+            }
+
+            if (cartCartListView.getItems().isEmpty()) {
+                AlertManager.displayAlert("Order unsuccessfull", "Order failed.",
+                        "Cart is empty.", Alert.AlertType.ERROR);
             }
 
             databaseManager.sendPreparedStatementQuery(preparedStatement);
             updateOrderListView();
         } catch (Exception orderErr) {
             orderErr.printStackTrace();
+            AlertManager.displayAlert("Order unsuccessful", "Failed to order.",
+                    "Check information", Alert.AlertType.ERROR);
+        } finally {
+            databaseManager.closeConnection();
+        }
+    }
+
+    public void updateCartOrdersListView() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        try {
+            databaseManager.sendStatementQuery("SELECT * FROM orders WHERE customer_id = '" + generalUser.getId() + "'");
+            ResultSet resultSet = databaseManager.getResultSet();
+            cartOrdersListView.getItems().clear();
+            while (resultSet.next()) {
+                Order order = new Order(
+                        resultSet.getInt("order_id"),
+                        resultSet.getInt("cart_id"),
+                        resultSet.getInt("assigned_manager_id"),
+                        resultSet.getDate("order_date").toLocalDate(),
+                        OrderStatus.values()[resultSet.getInt("order_status")]
+                );
+                cartOrdersListView.getItems().add(order);
+            }
+        } catch (Exception colwErr) {
+            colwErr.printStackTrace();
         } finally {
             databaseManager.closeConnection();
         }
@@ -424,6 +568,7 @@ public class MainWindow implements Initializable {
                 PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
                         "UPDATE carts set item_ids = ? WHERE user_id = ?"
                 );
+                preparedStatement.setInt(1, cartCartListView.getSelectionModel().getSelectedItem().getId());
 
                 if (admin != null) {
                     preparedStatement.setInt(2, admin.getId());
@@ -482,6 +627,7 @@ public class MainWindow implements Initializable {
             databaseManager.sendPreparedStatementQuery(preparedStatement);
             cartCartListView.getItems().remove(cartCartListView.getSelectionModel().getSelectedItem());
             updateProductListView(shopProductsListView);
+            updatePriceTotal();
         } catch (Exception removErr) {
             removErr.printStackTrace();
         } finally {
@@ -489,23 +635,16 @@ public class MainWindow implements Initializable {
         }
     }
 
-    public void onCommentMenuItemClick() {
+    public void onAddReviewMenuItemClick() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
             Parent parent = (Parent) fxmlLoader.load();
             CommentWindow commentWindow = fxmlLoader.getController();
-
-            if (admin != null) {
-                commentWindow.initData(admin, cartCartListView.getSelectionModel().getSelectedItem());
-            } else if (manager != null) {
-                commentWindow.initData(manager, cartCartListView.getSelectionModel().getSelectedItem());
-            } else if (customer != null) {
-                commentWindow.initData(customer, cartCartListView.getSelectionModel().getSelectedItem());
-            }
+            commentWindow.initData(generalUser, cartCartListView.getSelectionModel().getSelectedItem());
             updateCommentTreeView();
             Scene commentScene = new Scene(parent);
             Stage commentStage = new Stage();
-            commentStage.setTitle("Comment");
+            commentStage.setTitle("Review");
             commentStage.setScene(commentScene);
             commentStage.show();
         } catch (Exception comErr) {
@@ -518,10 +657,10 @@ public class MainWindow implements Initializable {
 
         if (!shopQuantityTextField.getText().trim().isEmpty() && Integer.parseInt(shopQuantityTextField.getText()) > 0
                 && product.getQuantity() >= Integer.parseInt(shopQuantityTextField.getText())) {
-            //product.setQuantity(product.getQuantity() - Integer.parseInt(shopQuantityTextField.getText()));
 
             DatabaseManager databaseManager = new DatabaseManager();
             databaseManager.openConnection();
+
             try {
                 PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
                         "UPDATE products SET quantity = ? WHERE product_id = ?"
@@ -530,14 +669,17 @@ public class MainWindow implements Initializable {
                         - Integer.parseInt(shopQuantityTextField.getText()));
                 preparedStatement.setInt(2, product.getId());
                 databaseManager.sendPreparedStatementQuery(preparedStatement);
+
             } catch (Exception addCartErr) {
                 addCartErr.printStackTrace();
             } finally {
                 databaseManager.closeConnection();
             }
+
             product.setQuantity(Integer.parseInt(shopQuantityTextField.getText()));
             cartCartListView.getItems().add(product);
             updateProductListView(shopProductsListView);
+            updatePriceTotal();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Bad quantity value.");
@@ -547,35 +689,17 @@ public class MainWindow implements Initializable {
         }
     }
 
+    public void updatePriceTotal() {
+        float priceTotal = 0.0F;
+        for (Product p : cartCartListView.getItems()) {
+            priceTotal += p.getPrice() * p.getQuantity();
+        }
+        cartTotalText.setText("Your total: " + priceTotal + "$");
+    }
+
     public void updateCommentTreeView() {
 
     }
-
-//    public void updateCartListView(User activeUser) {
-//        DatabaseManager databaseManager = new DatabaseManager();
-//        databaseManager.openConnection();
-//
-//        try {
-//            databaseManager.sendStatementQuery("SELECT * FROM carts WHERE user_id = '" + activeUser.getId() + "'");
-//            ResultSet resultSet = databaseManager.getResultSet();
-//            while(resultSet.next()) {
-//                String[] resArr = resultSet.getString("ITEM_IDS").split(";");
-//
-//                for (String itemId : resArr) {
-//
-//                    databaseManager.sendStatementQuery("SELECT * FROM carts WHERE item_id = '" + itemId + "'");
-//
-//                    Product product = new Product(
-//
-//                    );
-//                }
-//            }
-//        } catch (Exception upCarErr) {
-//            upCarErr.printStackTrace();
-//        } finally {
-//            databaseManager.closeConnection();
-//        }
-//    }
 
     // WAREHOUSE FUNCTIONS
     public void updateProductListView(ListView<Product> listView) {
@@ -861,7 +985,7 @@ public class MainWindow implements Initializable {
         try {
             Product product = productListView.getSelectionModel().getSelectedItem();
             PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                    "DELETE FROM products WHERE product_id = ?;"
+                    "DELETE FROM products WHERE product_id = ?"
             );
             preparedStatement.setInt(1, product.getId());
             databaseManager.sendPreparedStatementQuery(preparedStatement);
@@ -895,7 +1019,6 @@ public class MainWindow implements Initializable {
             productCapacityTextField.setText(Integer.toString(((Liquid) product).getCapacity()));
             productCompositionTextArea.setText(((HairDye) product).getComposition());
             productColorTextField.setText(((HairDye) product).getComposition());
-
         } else if (product instanceof Liquid) {
             onLiquidRadioButtonClick();
             productLiquidRadioButton.setSelected(true);
@@ -1092,13 +1215,6 @@ public class MainWindow implements Initializable {
     }
 
     public void updateUsersTableView() {
-        usersIdTableColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        usersEmailTableColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        usersPasswordTableColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
-        usersFirstnameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        usersLastnameTableColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
-        usersAccountTypeTableColumn.setCellValueFactory(new PropertyValueFactory<>("AccountType"));
-
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.openConnection();
 
@@ -1106,9 +1222,9 @@ public class MainWindow implements Initializable {
             databaseManager.sendStatementQuery("SELECT * FROM users");
             ResultSet resultSet = databaseManager.getResultSet();
             usersObservableList.clear();
+
             while (resultSet.next()) {
                 User user = new User();
-
                 user.setId(resultSet.getInt("user_id"));
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
@@ -1117,8 +1233,8 @@ public class MainWindow implements Initializable {
                 user.setAccountType(resultSet.getInt("account_type"));
 
                 usersObservableList.add(user);
-                usersTableView.setItems(usersObservableList);
             }
+            usersTableView.setItems(usersObservableList);
         } catch (Exception updErr) {
             updErr.printStackTrace();
         } finally {
@@ -1127,12 +1243,53 @@ public class MainWindow implements Initializable {
     }
 
     // ORDERS FUNCTIONS
+    public void filterOrders() {
+        if (ordersFromDatePicker.getValue() == null) {
+            Optional<Order> minDateOrder = ordersListView.getItems().stream().max((Order a, Order b) -> {
+                if (a.getOrderDate().isBefore(b.getOrderDate())) { return 1; }
+                else if (a.getOrderDate().isAfter(b.getOrderDate())) { return -1; }
+                return 0;
+            });
+            ordersFromDatePicker.setValue(minDateOrder.get().getOrderDate());
+        }
+
+        if (ordersToDatePicker.getValue() == null) {
+            Optional<Order> maxDateOrder = ordersListView.getItems().stream().max((Order a, Order b) -> {
+                if (a.getOrderDate().isBefore(b.getOrderDate())) { return -1; }
+                else if (a.getOrderDate().isAfter(b.getOrderDate())) { return 1; }
+                return 0;
+            });
+            ordersToDatePicker.setValue(maxDateOrder.get().getOrderDate());
+        }
+
+        if (!ordersFilterMTextField.getText().isEmpty()) {
+            ObservableList<Order> removableOrders = FXCollections.observableArrayList();
+            for (Order order : ordersListView.getItems()) {
+                if (order.getAssignedManagerId() != Integer.parseInt(ordersFilterMTextField.getText())) {
+                    removableOrders.add(order);
+                }
+            }
+            ordersListView.getItems().removeAll(removableOrders);
+        }
+
+        if (!ordersFilterStatusComboBox.getSelectionModel().isEmpty()) {
+            ObservableList<Order> removableOrders = FXCollections.observableArrayList();
+            for (Order order : ordersListView.getItems()) {
+                if (order.getOrderStatus() != ordersFilterStatusComboBox.getSelectionModel().getSelectedItem()) {
+                    removableOrders.add(order);
+                }
+            }
+            ordersListView.getItems().removeAll(removableOrders);
+        }
+    }
+
     public void onOrdersUpdateOrderStatusMenuItemClick() {
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.openConnection();
 
         try {
             ArrayList<String> choices = new ArrayList<>();
+            choices.add(OrderStatus.URGENT.toString());
             choices.add(OrderStatus.UNASSIGNED.toString());
             choices.add(OrderStatus.COLLECTING.toString());
             choices.add(OrderStatus.SHIPPING.toString());
@@ -1202,23 +1359,25 @@ public class MainWindow implements Initializable {
     }
 
     public void onOrdersDeleteOrderMenuItemClick() {
-        if (!(ordersListView.getSelectionModel().getSelectedItem().getOrderStatus() == OrderStatus.UNASSIGNED))
-        {
-            DatabaseManager databaseManager = new DatabaseManager();
-            databaseManager.openConnection();
+        if (!(ordersListView.getSelectionModel().getSelectedItem().getOrderStatus() == OrderStatus.UNASSIGNED ||
+                ordersListView.getSelectionModel().getSelectedItem().getOrderStatus() == OrderStatus.UNASSIGNED)) {
+            return;
+        }
 
-            try {
-                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                        "DELETE FROM orders WHERE cart_id = ?"
-                );
-                preparedStatement.setInt(1, ordersListView.getSelectionModel().getSelectedItem().getId());
-                databaseManager.sendPreparedStatementQuery(preparedStatement);
-                updateOrderListView();
-            } catch (Exception delErr) {
-                delErr.printStackTrace();
-            } finally {
-                databaseManager.closeConnection();
-            }
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        try {
+            PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                    "DELETE FROM orders WHERE order_id = ?"
+            );
+            preparedStatement.setInt(1, ordersListView.getSelectionModel().getSelectedItem().getId());
+            databaseManager.sendPreparedStatementQuery(preparedStatement);
+            updateOrderListView();
+        } catch (Exception delErr) {
+            delErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
         }
     }
 
@@ -1235,9 +1394,40 @@ public class MainWindow implements Initializable {
                 order.setId(resultSet.getInt("ORDER_ID"));
                 order.setCartId(resultSet.getInt("CART_ID"));
                 order.setAssignedManagerId(resultSet.getInt("ASSIGNED_MANAGER_ID"));
+                order.setOrderDate(resultSet.getDate("ORDER_DATE").toLocalDate());
                 order.setOrderStatus(OrderStatus.values()[resultSet.getInt("ORDER_STATUS")]);
 
-                ordersListView.getItems().add(order);
+                if (order.getAssignedManagerId() == 0 && order.getOrderDate().isBefore(LocalDate.now())) {
+                    order.setOrderStatus(OrderStatus.URGENT);
+                } else if (order.getAssignedManagerId() == 0) {
+                    order.setOrderStatus(OrderStatus.UNASSIGNED);
+                } else {
+                    order.setOrderStatus(OrderStatus.COLLECTING);
+                }
+
+                ObservableList<Order> orders = FXCollections.observableArrayList();
+                orders.add(order);
+
+                orders.sort((Order a, Order b) -> {
+                    if (a.getOrderStatus().ordinal() > b.getOrderStatus().ordinal()) { return -1; }
+                    else if (a.getOrderStatus().ordinal() < b.getOrderStatus().ordinal()) { return 1; }
+                    return 0;
+                });
+
+                ordersListView.getItems().addAll(orders);
+                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                        "UPDATE orders SET assigned_manager_id = ?, order_status = ? WHERE order_id = ?"
+                );
+
+                for (Order o : orders) {
+                    preparedStatement.setInt(1, o.getAssignedManagerId());
+                    preparedStatement.setInt(2, o.getOrderStatus().ordinal());
+                    preparedStatement.setInt(3, o.getId());
+                    databaseManager.sendPreparedStatementQuery(preparedStatement);
+                }
+
+                ordersFilterStatusComboBox.getSelectionModel().clearSelection();
+                ordersFilterMTextField.clear();
             }
         } catch (Exception orErr) {
             orErr.printStackTrace();

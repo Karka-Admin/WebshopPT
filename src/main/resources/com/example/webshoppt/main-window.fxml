@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.ListView?>
@@ -45,18 +46,18 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="262.0">
                      <children>
-                        <ListView fx:id="cartCartListView" layoutX="14.0" layoutY="57.0" prefHeight="604.0" prefWidth="488.0">
+                        <ListView fx:id="cartCartListView" layoutX="14.0" layoutY="57.0" prefHeight="270.0" prefWidth="488.0">
                            <contextMenu>
                               <ContextMenu>
                                 <items>
                                   <MenuItem fx:id="cartRemoveFromCartMenuItem" mnemonicParsing="false" onAction="#onRemoveFromCartMenuItemClick" text="Remove from cart" />
-                                  <MenuItem fx:id="cartCommentMenuItem" mnemonicParsing="false" onAction="#onCommentMenuItemClick" text="Add review" />
-                                  <MenuItem fx:id="cartViewCommentsMenuItem" mnemonicParsing="false" onAction="#onViewCommentsMenuItemClick" text="View reviews" />
+                                  <MenuItem fx:id="cartCommentMenuItem" mnemonicParsing="false" onAction="#onAddReviewMenuItemClick" text="Add review" />
+                                  <MenuItem fx:id="cartViewCommentsMenuItem" mnemonicParsing="false" onAction="#viewOrderComments" text="View reviews" />
                                 </items>
                               </ContextMenu>
                            </contextMenu>
                         </ListView>
-                        <Button fx:id="cartOrderButton" layoutX="14.0" layoutY="688.0" mnemonicParsing="false" onAction="#onCartOrderButtonClick" prefHeight="38.0" prefWidth="234.0" text="Order" />
+                        <Button fx:id="cartOrderButton" layoutX="653.0" layoutY="638.0" mnemonicParsing="false" onAction="#onCartOrderButtonClick" prefHeight="38.0" prefWidth="100.0" text="Order" />
                         <Text layoutX="14.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="YOUR CART" wrappingWidth="257.3745880126953">
                            <font>
                               <Font size="32.0" />
@@ -67,14 +68,13 @@
                               <Font size="32.0" />
                            </font>
                         </Text>
-                        <TreeView fx:id="cartCommentSectionTreeView" layoutX="919.0" layoutY="58.0" prefHeight="602.0" prefWidth="346.0">
+                        <TreeView fx:id="cartCommentSectionTreeView" layoutX="919.0" layoutY="58.0" prefHeight="620.0" prefWidth="346.0">
                            <contextMenu>
                               <ContextMenu>
                                 <items>
-                                    <MenuItem fx:id="cartViewChatMenuItem" mnemonicParsing="false" onAction="#onViewChatMenuItemClick" text="View chat" />
-                                    <MenuItem fx:id="cartAddCommentMenuItem" mnemonicParsing="false" onAction="#onAddCommentMenuItemClick" text="Add comment" />
                                     <MenuItem fx:id="cartReplyMenuItem" mnemonicParsing="false" onAction="#onReplyMenuItemClick" text="Reply" />
                                     <MenuItem fx:id="cartUpdateCommentMenuItem" mnemonicParsing="false" onAction="#onUpdateCommentMenuItemClick" text="Update" />
+                                    <MenuItem fx:id="cartDeleteCommentMenuItem" mnemonicParsing="false" onAction="#onDeleteCommentMenuItemClick" text="Delete" />
                                 </items>
                               </ContextMenu>
                            </contextMenu></TreeView>
@@ -100,12 +100,31 @@
                         <TextField fx:id="cartCVCTextField" alignment="CENTER" layoutX="852.0" layoutY="362.0" prefHeight="26.0" prefWidth="40.0" promptText="CVC" />
                         <DatePicker fx:id="cartExpirationDateDatePicker" layoutX="534.0" layoutY="396.0" prefHeight="26.0" prefWidth="358.0" promptText="Expiration date" />
                         <DatePicker fx:id="cartBirthDateDatePicker" layoutX="533.0" layoutY="229.0" prefHeight="26.0" prefWidth="358.0" promptText="Birth date" />
-                        <Button fx:id="cartSaveCartButton" layoutX="267.0" layoutY="688.0" mnemonicParsing="false" onAction="#onSaveCartButtonClick" prefHeight="38.0" prefWidth="234.0" text="Save cart" />
+                        <Button fx:id="cartSaveCartButton" layoutX="14.0" layoutY="695.0" mnemonicParsing="false" onAction="#onSaveCartButtonClick" prefHeight="38.0" prefWidth="100.0" text="Save cart" />
                         <TextField fx:id="cartClientFirstNameTextField" layoutX="532.0" layoutY="87.0" prefHeight="26.0" prefWidth="170.0" promptText="First name" />
                         <TextField fx:id="cartSecondaryStreetAddressTextField" layoutX="533.0" layoutY="158.0" prefHeight="26.0" prefWidth="358.0" promptText="Secondary street address" />
                         <TextField fx:id="cartCityTextField" layoutX="533.0" layoutY="193.0" prefHeight="26.0" prefWidth="170.0" promptText="City" />
                         <TextField fx:id="cartClientLastNameTextField" layoutX="720.0" layoutY="87.0" prefHeight="26.0" prefWidth="170.0" promptText="Last name" />
                         <TextField fx:id="cartPostalCodeTextField" layoutX="720.0" layoutY="193.0" prefHeight="26.0" prefWidth="170.0" promptText="Postal code" />
+                        <ListView fx:id="cartOrdersListView" layoutX="14.0" layoutY="406.0" prefHeight="270.0" prefWidth="489.0">
+                           <contextMenu>
+                              <ContextMenu>
+                                <items>
+                                    <MenuItem fx:id="cartOrdersViewCommentsMenuItem" mnemonicParsing="false" onAction="#viewOrderComments" text="View comments" />
+                                    <MenuItem fx:id="cartOrdersAddCommentMenuItem" mnemonicParsing="false" onAction="#addOrderComment" text="Add comment" />
+                                </items>
+                              </ContextMenu>
+                           </contextMenu></ListView>
+                        <Text layoutX="14.0" layoutY="387.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Orders" wrappingWidth="257.3745880126953">
+                           <font>
+                              <Font size="32.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="cartTotalText" layoutX="534.0" layoutY="461.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your total: 0.0$">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Text>
                      </children></AnchorPane>
                </content>
             </Tab>
@@ -149,7 +168,7 @@
                <content>
                   <AnchorPane fx:id="usersTabPane" minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="262.0">
                      <children>
-                        <TableView fx:id="usersTableView" fixedCellSize="1.0" layoutX="14.0" layoutY="72.0" prefHeight="675.0" prefWidth="1106.0">
+                        <TableView fx:id="usersTableView" editable="true" fixedCellSize="1.0" layoutX="14.0" layoutY="72.0" prefHeight="675.0" prefWidth="1106.0">
                           <columns>
                             <TableColumn fx:id="usersIdTableColumn" prefWidth="78.0" text="Id" />
                             <TableColumn fx:id="usersEmailTableColumn" prefWidth="296.0" text="Email" />
@@ -193,7 +212,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="262.0">
                      <children>
-                        <ListView fx:id="ordersListView" layoutX="14.0" layoutY="14.0" prefHeight="742.0" prefWidth="1250.0">
+                        <ListView fx:id="ordersListView" layoutX="14.0" layoutY="65.0" prefHeight="691.0" prefWidth="933.0">
                            <contextMenu>
                               <ContextMenu fx:id="ordersContextMenu">
                                 <items>
@@ -205,6 +224,22 @@
                               </ContextMenu>
                            </contextMenu>
                         </ListView>
+                        <Text layoutX="14.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Orders">
+                           <font>
+                              <Font size="36.0" />
+                           </font>
+                        </Text>
+                        <DatePicker fx:id="ordersFromDatePicker" layoutX="966.0" layoutY="65.0" prefHeight="25.0" prefWidth="300.0" promptText="From" />
+                        <Text layoutX="966.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Filter">
+                           <font>
+                              <Font size="36.0" />
+                           </font>
+                        </Text>
+                        <DatePicker fx:id="ordersToDatePicker" layoutX="966.0" layoutY="99.0" prefHeight="25.0" prefWidth="300.0" promptText="To" />
+                        <TextField fx:id="ordersFilterMTextField" layoutX="966.0" layoutY="133.0" prefHeight="25.0" prefWidth="302.0" promptText="Manager id" />
+                        <Button fx:id="ordersFilterButton" layoutX="966.0" layoutY="200.0" mnemonicParsing="false" onAction="#filterOrders" prefHeight="36.0" prefWidth="140.0" text="Filter" />
+                        <Button fx:id="ordersClearButton" layoutX="1126.0" layoutY="200.0" mnemonicParsing="false" onAction="#updateOrderListView" prefHeight="36.0" prefWidth="140.0" text="Clear" />
+                        <ComboBox fx:id="ordersFilterStatusComboBox" layoutX="966.0" layoutY="165.0" prefHeight="25.0" prefWidth="302.0" />
                      </children></AnchorPane>
                </content>
             </Tab>
