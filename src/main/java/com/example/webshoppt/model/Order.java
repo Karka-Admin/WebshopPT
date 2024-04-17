@@ -20,6 +20,7 @@ public class Order extends Cart {
 
     @Override
     public String toString() {
-        return id + " | " + cartId + " | " + assignedManagerId + " | " + orderDate + " | " + orderStatus;
+        return "ID: " + id + " | CART_ID: " + cartId + " | MGR_ID: " + assignedManagerId + " | DATE: "
+                + orderDate + " | " + orderStatus;
     }
 }

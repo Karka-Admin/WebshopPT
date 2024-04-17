@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80c69551-48a8-4031-a496-e8abd95b5a81" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/javaee.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/CommentWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/CommentWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/fxcontrollers/MainWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Comment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webshoppt/model/OrderStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/comment-window.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/comment-window.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/main-window.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/main-window.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -172,6 +165,9 @@
       <workItem from="1713180722742" duration="4560000" />
       <workItem from="1713190630313" duration="14097000" />
       <workItem from="1713291501271" duration="3724000" />
+      <workItem from="1713338780507" duration="30000" />
+      <workItem from="1713338867911" duration="905000" />
+      <workItem from="1713363783148" duration="12441000" />
     </task>
     <servers />
   </component>

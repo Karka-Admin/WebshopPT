@@ -52,7 +52,7 @@
                                 <items>
                                   <MenuItem fx:id="cartRemoveFromCartMenuItem" mnemonicParsing="false" onAction="#onRemoveFromCartMenuItemClick" text="Remove from cart" />
                                   <MenuItem fx:id="cartCommentMenuItem" mnemonicParsing="false" onAction="#onAddReviewMenuItemClick" text="Add review" />
-                                  <MenuItem fx:id="cartViewCommentsMenuItem" mnemonicParsing="false" onAction="#viewOrderComments" text="View reviews" />
+                                  <MenuItem fx:id="cartViewReviewsMenuItem" mnemonicParsing="false" onAction="#onViewReviewsMenuItemClick" text="View reviews" />
                                 </items>
                               </ContextMenu>
                            </contextMenu>
@@ -112,6 +112,7 @@
                                 <items>
                                     <MenuItem fx:id="cartOrdersViewCommentsMenuItem" mnemonicParsing="false" onAction="#viewOrderComments" text="View comments" />
                                     <MenuItem fx:id="cartOrdersAddCommentMenuItem" mnemonicParsing="false" onAction="#addOrderComment" text="Add comment" />
+                                    <MenuItem fx:id="cartOrderCancelMenuItem" mnemonicParsing="false" onAction="#cancelOrder" text="Cancel order" />
                                 </items>
                               </ContextMenu>
                            </contextMenu></ListView>

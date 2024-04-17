@@ -16,7 +16,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import lombok.Data;
 
 import java.net.URL;
 import java.sql.Date;
@@ -40,31 +39,13 @@ public class MainWindow implements Initializable {
 
     // SHOP TAB ELEMENTS
     @FXML
-    private Tab shopTab;
-    @FXML
     private Text shopWelcomeUserText;
     @FXML
     private TextField shopQuantityTextField;
     @FXML
     private ListView<Product> shopProductsListView;
-    @FXML
-    private Button shopAddToCartButton;
 
     // CART TAB ELEMENTS
-    @FXML
-    private Tab cartTab;
-    @FXML
-    private Button cartOrderButton;
-    @FXML
-    private Button cartSaveCartButton;
-    @FXML
-    private MenuItem cartRemoveFromCartMenuItem;
-    @FXML
-    private MenuItem cartCommentMenuItem;
-    @FXML
-    private MenuItem cartOrdersViewCommentsMenuItem;
-    @FXML
-    private MenuItem cartOrdersAddCommentMenuItem;
     @FXML
     public MenuItem cartDeleteCommentMenuItem;
     @FXML
@@ -89,12 +70,6 @@ public class MainWindow implements Initializable {
     @FXML
     private TextField cartPostalCodeTextField;
     @FXML
-    private MenuItem cartViewChatMenuItem;
-    @FXML
-    private MenuItem cartReplyMenuItem;
-    @FXML
-    private MenuItem cartUpdateCommentMenuItem;
-    @FXML
     private TextField cartCardFirstNameTextField;
     @FXML
     private TextField cartCardLastNameTextField;
@@ -112,14 +87,6 @@ public class MainWindow implements Initializable {
     private Tab warehouseTab;
     @FXML
     private ListView<Product> productListView;
-    @FXML
-    private Button productAddButton;
-    @FXML
-    private Button productUpdateButton;
-    @FXML
-    private Button productDeleteButton;
-    @FXML
-    private Button productRefreshListButton;
     @FXML
     private TextField productNameTextField;
     @FXML
@@ -179,16 +146,6 @@ public class MainWindow implements Initializable {
     private TextField ordersFilterMTextField;
     @FXML
     private ComboBox<OrderStatus> ordersFilterStatusComboBox;
-    @FXML
-    private Button ordersFilterButton;
-    @FXML
-    private Button ordersClearButton;
-    @FXML
-    private MenuItem ordersUpdateOrderStatusMenuItem;
-    @FXML
-    private MenuItem ordersAssignManagerMenuItem;
-    @FXML
-    private MenuItem ordersDeleteOrderMenuItem;
 
     // GENERAL FUNCTIONS
     @Override
@@ -369,40 +326,64 @@ public class MainWindow implements Initializable {
         }
     }
 
-//    public void onViewCommentsMenuItemClick() {
-//        DatabaseManager databaseManager = new DatabaseManager();
-//        databaseManager.openConnection();
-//
-//        try {
-//            cartCommentSectionTreeView.setRoot(new TreeItem<>());
-//            cartCommentSectionTreeView.setShowRoot(false);
-//            cartCommentSectionTreeView.getRoot().setExpanded(true);
-//
-//            databaseManager.sendStatementQuery("SELECT * FROM comments WHERE product_id = '"
-//                    + cartCartListView.getSelectionModel().getSelectedItem().getId() + "'");
-//
-//            ResultSet resultSet = databaseManager.getResultSet();
-//            while (resultSet.next()) {
-//                Comment comment = new Comment(
-//                        resultSet.getInt("comment_id"),
-//                        resultSet.getInt("parent_id"),
-//                        resultSet.getInt("product_id"),
-//                        resultSet.getInt("user_id"),
-//                        resultSet.getInt("chat_id"),
-//                        resultSet.getInt("rating"),
-//                        resultSet.getString("title"),
-//                        resultSet.getString("body"),
-//                        null,
-//                        resultSet.getDate("date").toLocalDate()
-//                );
-//                cartCommentSectionTreeView.getRoot().getChildren().add(new TreeItem<>(comment));
-//            }
-//        } catch (Exception treeUpErr) {
-//            treeUpErr.printStackTrace();
-//        } finally {
-//            databaseManager.closeConnection();
-//        }
-//    }
+    public void onViewReviewsMenuItemClick() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        try {
+            cartCommentSectionTreeView.setRoot(new TreeItem<>());
+            cartCommentSectionTreeView.setShowRoot(false);
+            cartCommentSectionTreeView.getRoot().setExpanded(true);
+
+            databaseManager.sendStatementQuery("SELECT * FROM comments WHERE product_id = '"
+                    + cartCartListView.getSelectionModel().getSelectedItem().getId() + "'");
+
+            ResultSet resultSet = databaseManager.getResultSet();
+            while (resultSet.next()) {
+                Comment comment = new Comment(
+                        resultSet.getInt("comment_id"),
+                        resultSet.getInt("parent_id"),
+                        resultSet.getInt("product_id"),
+                        resultSet.getInt("user_id"),
+                        resultSet.getInt("chat_id"),
+                        resultSet.getInt("rating"),
+                        resultSet.getString("title"),
+                        resultSet.getString("body"),
+                        null,
+                        resultSet.getDate("date").toLocalDate()
+                );
+                cartCommentSectionTreeView.getRoot().getChildren().add(new TreeItem<>(comment));
+            }
+        } catch (Exception treeUpErr) {
+            treeUpErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
+        }
+    }
+
+   public void cancelOrder() {
+        if (cartOrdersListView.getSelectionModel().getSelectedItem().getOrderStatus() != OrderStatus.UNASSIGNED ||
+            cartOrdersListView.getSelectionModel().getSelectedItem().getOrderStatus() != OrderStatus.URGENT) {
+            AlertManager.displayAlert("Order cancelation unsuccesful", "Failed to cancel order",
+                    "The order is already being proccessed.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        try {
+            PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                    "DELETE FROM orders WHERE order_id = ?"
+            );
+            preparedStatement.setInt(1, cartOrdersListView.getSelectionModel().getSelectedItem().getId());
+            databaseManager.sendPreparedStatementQuery(preparedStatement);
+        } catch (Exception coErr) {
+            coErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
+        }
+   }
 
     public void viewOrderComments() {
         DatabaseManager databaseManager = new DatabaseManager();
@@ -423,22 +404,13 @@ public class MainWindow implements Initializable {
                         resultSet.getInt("rating"),
                         resultSet.getString("title"),
                         resultSet.getString("body"),
-                        null,
+                        new ArrayList<Comment>(),
                         resultSet.getDate("date").toLocalDate()
                 );
                 comments.add(comment);
             }
 
-            for (int i = 0; i < comments.size(); i++) {
-                ArrayList<Comment> replyList = new ArrayList<>();
-                for (int j = 0; j < comments.size(); j++) {
-                    if (comments.get(i).getId() == comments.get(j).getParentId() && i != j) {
-                        replyList.add(comments.get(j));
-                        comments.remove(comments.get(j));
-                    }
-                }
-                comments.get(i).setReplies(replyList);
-            }
+            comments = getTopLevelComments(comments);
 
             cartCommentSectionTreeView.setRoot(new TreeItem<>());
             cartCommentSectionTreeView.setShowRoot(false);
@@ -449,6 +421,30 @@ public class MainWindow implements Initializable {
             vocErr.printStackTrace();
         } finally {
             databaseManager.closeConnection();
+        }
+    }
+
+    public ArrayList<Comment> getTopLevelComments(ArrayList<Comment> comments) {
+        ArrayList<Comment> tlComments = new ArrayList<>();
+        for (Comment comment : comments) {
+            if (comment.getParentId() == 0) {
+                tlComments.add(comment);
+            }
+        }
+
+        for (Comment tlComment : tlComments) {
+            getReplyLevelComments(tlComment, comments);
+        }
+
+        return tlComments;
+    }
+
+    public void getReplyLevelComments(Comment comment, ArrayList<Comment> allComments) {
+        for (int i = 0; i < allComments.size(); i++) {
+            if (allComments.get(i).getParentId() == comment.getId()) {
+                comment.getReplies().add(allComments.get(i));
+                getReplyLevelComments(allComments.get(i), allComments);
+            }
         }
     }
 
@@ -492,9 +488,8 @@ public class MainWindow implements Initializable {
             if (resultSet.next()) {
                 preparedStatement.setInt(1, resultSet.getInt("cart_id"));
                 preparedStatement.setDate(2, Date.valueOf(LocalDate.now()));
-            } else {
-                onSaveCartButtonClick();
             }
+            //else { saveCart(); }
 
             if (cartClientFirstNameTextField.getText().isEmpty() ||
                     cartClientLastNameTextField.getText().isEmpty() ||
@@ -505,6 +500,7 @@ public class MainWindow implements Initializable {
                     cartBirthDateDatePicker.getValue() == null) {
                 AlertManager.displayAlert("Order unsuccessfull", "Order failed.",
                         "Missing client information.", Alert.AlertType.ERROR);
+                return;
             }
 
             if (cartCardFirstNameTextField.getText().isEmpty() ||
@@ -514,19 +510,47 @@ public class MainWindow implements Initializable {
                     cartExpirationDateDatePicker.getValue() == null) {
                 AlertManager.displayAlert("Order unsuccessfull", "Order failed.",
                         "Missing card information.", Alert.AlertType.ERROR);
+                return;
             }
 
             if (cartCartListView.getItems().isEmpty()) {
                 AlertManager.displayAlert("Order unsuccessfull", "Order failed.",
                         "Cart is empty.", Alert.AlertType.ERROR);
+                return;
             }
 
             databaseManager.sendPreparedStatementQuery(preparedStatement);
+            reviseInfo();
             updateOrderListView();
         } catch (Exception orderErr) {
             orderErr.printStackTrace();
             AlertManager.displayAlert("Order unsuccessful", "Failed to order.",
                     "Check information", Alert.AlertType.ERROR);
+        } finally {
+            databaseManager.closeConnection();
+        }
+    }
+
+    public void reviseInfo() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        try {
+            PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                    "REPLACE INTO addresses (first_name, last_name, primary_address, secondary_address," +
+                            "city, postal_code, birth_date) VALUES (?, ?, ?, ?, ?, ?, ?) WHERE user_id = ?"
+            );
+            preparedStatement.setInt(1, generalUser.getId());
+            preparedStatement.setString(2, cartClientFirstNameTextField.getText());
+            preparedStatement.setString(3, cartClientLastNameTextField.getText());
+            preparedStatement.setString(4, cartStreetAddressTextField.getText());
+            preparedStatement.setString(5, cartSecondaryStreetAddressTextField.getText());
+            preparedStatement.setString(6, cartCityTextField.getText());
+            preparedStatement.setString(7, cartPostalCodeTextField.getText());
+            preparedStatement.setDate(8, Date.valueOf(cartBirthDateDatePicker.getValue()));
+            databaseManager.sendPreparedStatementQuery(preparedStatement);
+        } catch (Exception riErr) {
+            riErr.printStackTrace();
         } finally {
             databaseManager.closeConnection();
         }
