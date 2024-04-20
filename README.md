@@ -15,6 +15,7 @@
 - _XAMPP_
 - _MySQL_
 - _Github_
+- _Springboot_
 
 ## TODO
 ### Bendri reikalavimai
@@ -22,13 +23,13 @@ Kuriama parduotuvė, prie šios kuriamos sistemos jungiasi vartotojai. Vartotoja
 
 - [X] Sistema turi vartotojus, kurie prisijungdami prie sistemos autentifikuojasi ir pasiekia tik jiems skirtus duomenis (Pavyzdžiui, klientai negali matyti sistemos vartotojų, tačiau mato savo užsakymus, prekes. Darbuotojai, mato visus vartotojus, bet negali jų keisti, tik savo duomenis. Darbuotojai skirtingų lygių ir skirtingas funkcijas gali matyti ir atlikti ir pan.)
 - [X] Vartotojai yra bent 2 tipų – klientai ir parduotuvės darbuotojai (būtina išsaugoti vardą, pavardę, kontaktinę informaciją, gimimo datą ir t.t.). Tiek klientai, tiek darbuotojai turi požymių bendrų abiem, tačiau ir kažkuo skiriasi. Jungiamasi su prisijungimo vardu ir slaptažodžiu, slaptažodis duomenų bazėje turi būti hashed
-- [ ] Pirkėjai renkasi prekes iš galimų prekių sąrašo, palieka įvertinimus ir komentarus apie prekes, gali parašyti prie užsakymo. Peržiūri savo pirkinių istoriją, gali atšaukti vykdomus užsakymus, apmokėti užsakymą ir pan
-- [ ] Visas redagavimo teises turi administratoriai (kaip realizuosite, Jūsų pasirinkimas)
-- [ ] Parduotuvės darbuotojai pilnai valdo užsakymus (negali tik ištrinti jau įvykdytų ar vykdomų užsakymų), pilnai valdo prekes bei informaciją apie parduotuves. Darbuotojai priskiria atsakingą už užsakymą darbuotoją, jį galima pakeisti. Visi nepriskirti užsakymai yra matomi visiems darbuotojams ir jie gali “pasiimti” užsakymą. Jei užsakymo nepasiima niekas per vieną darbo dieną, jis turi būti iškeltas ir pažymėtas kaip skubus, kad jį kuo greičiau pamatytų
-- [ ] Tiek klientai, tiek pardavėjai gali rašyti ir atsakyti į kitus komentarus prie prekių. Prie užsakymo yra paprasta susirašinėjimo galimybė
-- [ ] Komentarų gylis prie prekių yra neribojamas
-- [ ] Galima filtruoti užsakymus pagal sukūrimo datas (intervale kažkokiame), statusus, klientus ir pan. Pasirinkite bent 3 požymius pagal ką filtruosite
-- [ ] Sistemą turi sudaryti dvi posistemės: darbalaukio ir internetinė sistema (web server)
+- [X] Pirkėjai renkasi prekes iš galimų prekių sąrašo, palieka įvertinimus ir komentarus apie prekes, gali parašyti prie užsakymo. Peržiūri savo pirkinių istoriją, gali atšaukti vykdomus užsakymus, apmokėti užsakymą ir pan
+- [X] Visas redagavimo teises turi administratoriai (kaip realizuosite, Jūsų pasirinkimas)
+- [X] Parduotuvės darbuotojai pilnai valdo užsakymus (negali tik ištrinti jau įvykdytų ar vykdomų užsakymų), pilnai valdo prekes bei informaciją apie parduotuves. Darbuotojai priskiria atsakingą už užsakymą darbuotoją, jį galima pakeisti. Visi nepriskirti užsakymai yra matomi visiems darbuotojams ir jie gali “pasiimti” užsakymą. Jei užsakymo nepasiima niekas per vieną darbo dieną, jis turi būti iškeltas ir pažymėtas kaip skubus, kad jį kuo greičiau pamatytų
+- [X] Tiek klientai, tiek pardavėjai gali rašyti ir atsakyti į kitus komentarus prie prekių. Prie užsakymo yra paprasta susirašinėjimo galimybė
+- [X] Komentarų gylis prie prekių yra neribojamas
+- [X] Galima filtruoti užsakymus pagal sukūrimo datas (intervale kažkokiame), statusus, klientus ir pan. Pasirinkite bent 3 požymius pagal ką filtruosite
+- [X] Sistemą turi sudaryti dvi posistemės: darbalaukio ir internetinė sistema (web server)
 
 ### Grafinė vartotojo sąsaja
 - [X] Remiantis kursinio darbo užduotimis, suprojektuoti sistemos klasių diagramą, kuri atitiktų objektinio programavimo principus ir leistų paprastai kurti ir valdyti visus projekto objektus
@@ -50,10 +51,10 @@ Kuriama parduotuvė, prie šios kuriamos sistemos jungiasi vartotojai. Vartotoja
 - [X] Duomenų redagavimas duomenų bazėje
 
 ### Web serviso kūrimas
-- [ ] Web serviso veikimas (galima kreiptis ir gauti atsakymą)
-- [ ] Duomenų gavimas html, json ar kitu formatu
-- [ ] Parametrų, duomenų perdavimas į serverį
-- [ ] Savo ankstesnių laboratorinių darbų panaudojimas sistemos funkcionalumo perkėlimui į web
+- [X] Web serviso veikimas (galima kreiptis ir gauti atsakymą)
+- [X] Duomenų gavimas html, json ar kitu formatu
+- [X] Parametrų, duomenų perdavimas į serverį
+- [X] Savo ankstesnių laboratorinių darbų panaudojimas sistemos funkcionalumo perkėlimui į web
 
 ## DOKUMENTACIJA
 ### Use-Case Diagrama

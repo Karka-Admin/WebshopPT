@@ -10,7 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
-import lombok.Data;
+import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,6 +53,7 @@ public class CommentWindow implements Initializable {
         commentRatingSlider.setVisible(true);
         commentTitleTextField.setPromptText("Title");
         commentTextArea.setPromptText("Your review");
+        commentCommentButton.setText("Review");
         commentCommentButton.setOnAction(event -> addReview());
     }
 
@@ -64,6 +65,7 @@ public class CommentWindow implements Initializable {
         commentRatingSlider.setVisible(false);
         commentTitleTextField.setPromptText("Title");
         commentTextArea.setPromptText("Your comment");
+        commentCommentButton.setText("Comment");
         commentCommentButton.setOnAction(event -> addComment());
     }
 
@@ -78,6 +80,7 @@ public class CommentWindow implements Initializable {
             commentTitleTextField.setText(comment.getTitle());
             commentTextArea.setPromptText("New comment");
             commentTextArea.setText(comment.getBody());
+            commentCommentButton.setText("Update");
             commentCommentButton.setOnAction(event -> updateComment());
         } else {
             commentHeaderText.setText("Leave a reply");
@@ -85,6 +88,7 @@ public class CommentWindow implements Initializable {
             commentRatingSlider.setVisible(false);
             commentTitleTextField.setPromptText("Title");
             commentTextArea.setPromptText("Your reply");
+            commentCommentButton.setText("Reply");
             commentCommentButton.setOnAction(event -> addReply());
         }
     }
@@ -104,6 +108,9 @@ public class CommentWindow implements Initializable {
             preparedStatement.setString(4, commentTitleTextField.getText());
             preparedStatement.setString(5, commentTextArea.getText());
             databaseManager.sendPreparedStatementQuery(preparedStatement);
+
+            Stage commentStage = (Stage) commentCommentButton.getScene().getWindow();
+            commentStage.close();
         } catch (Exception commErr) {
             commErr.printStackTrace();
             AlertManager.displayAlert("Review unsuccessful", "Failed to add review.",
@@ -125,6 +132,9 @@ public class CommentWindow implements Initializable {
             preparedStatement.setString(2, commentTextArea.getText());
             preparedStatement.setInt(3, comment.getId());
             databaseManager.sendPreparedStatementQuery(preparedStatement);
+
+            Stage commentStage = (Stage) commentCommentButton.getScene().getWindow();
+            commentStage.close();
         } catch (Exception ucErr) {
             ucErr.printStackTrace();
         } finally {
@@ -148,6 +158,8 @@ public class CommentWindow implements Initializable {
             preparedStatement.setString(5, commentTextArea.getText());
             databaseManager.sendPreparedStatementQuery(preparedStatement);
 
+            Stage commentStage = (Stage) commentCommentButton.getScene().getWindow();
+            commentStage.close();
         } catch (Exception commErr) {
             commErr.printStackTrace();
             AlertManager.displayAlert("Review unsuccessful", "Failed to add review.",
@@ -173,6 +185,9 @@ public class CommentWindow implements Initializable {
             preparedStatement.setString(4, commentTextArea.getText());
             preparedStatement.setDate(5, Date.valueOf(LocalDate.now()));
             databaseManager.sendPreparedStatementQuery(preparedStatement);
+
+            Stage commentStage = (Stage) commentCommentButton.getScene().getWindow();
+            commentStage.close();
         } catch (Exception aocErr) {
             aocErr.printStackTrace();
         } finally {

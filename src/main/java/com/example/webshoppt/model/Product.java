@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -25,6 +24,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return id + "\t|\t" + name + " | " + price + " | " + quantity;
+        return "ID: " + id + " | QTY: " + quantity + " | RATING: " + averageRating + " | PRICE: " + price +
+                " | NAME: " + name + " | BRAND: " + brand;
     }
 }

@@ -165,6 +165,7 @@ public class MainWindow implements Initializable {
 
         initFilterComboBox();
         filterOrders();
+        updateProductRatings();
     }
 
     public void initUser(User activeUser) {
@@ -184,7 +185,6 @@ public class MainWindow implements Initializable {
         initWelcomeUserText(activeUser);
         initShippingInformation(customer);
         updateCartOrdersListView();
-        //updateCartListView(generalUser);
     }
 
     public void initWelcomeUserText(User user) {
@@ -251,11 +251,47 @@ public class MainWindow implements Initializable {
     }
 
     // SHOP FUNCTIONS
+    public void updateProductRatings() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.openConnection();
+
+        try {
+            databaseManager.sendStatementQuery("SELECT * FROM products");
+            ResultSet productResultSet = databaseManager.getResultSet();
+            float rating;
+            int ratingCount;
+            while (productResultSet.next()) {
+                databaseManager.sendStatementQuery("SELECT * FROM comments WHERE rating IS NOT NULL AND product_id = '"
+                        + productResultSet.getString("product_id") + "'");
+                ResultSet commentsResultSet = databaseManager.getResultSet();
+
+                rating = 0;
+                ratingCount = 0;
+                while (commentsResultSet.next()) {
+                    rating += commentsResultSet.getInt("rating");
+                    ratingCount++;
+                }
+
+                PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                        "UPDATE products SET average_rating = ? WHERE product_id = ?"
+                );
+                if (ratingCount > 0) { preparedStatement.setFloat(1, rating / ratingCount); }
+                else { preparedStatement.setFloat(1, 0.0F); }
+                preparedStatement.setInt(2, productResultSet.getInt("product_id"));
+                databaseManager.sendPreparedStatementQuery(preparedStatement);
+            }
+        } catch (Exception uprErr) {
+            uprErr.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
+        }
+    }
+
     // CART FUNCTIONS
     public void onReplyMenuItemClick() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
-            Parent parent = (Parent) fxmlLoader.load();
+            Parent parent = fxmlLoader.load();
             CommentWindow commentWindow = fxmlLoader.getController();
             commentWindow.initData(generalUser,
                     cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue(), false);
@@ -264,8 +300,6 @@ public class MainWindow implements Initializable {
             commentStage.setTitle("Reply");
             commentStage.setScene(commentScene);
             commentStage.show();
-
-            viewOrderComments();
         } catch (Exception comErr) {
             comErr.printStackTrace();
         }
@@ -283,7 +317,7 @@ public class MainWindow implements Initializable {
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
-            Parent parent = (Parent) fxmlLoader.load();
+            Parent parent = fxmlLoader.load();
             CommentWindow commentWindow = fxmlLoader.getController();
             commentWindow.initData(generalUser,
                     cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue(), true);
@@ -292,8 +326,6 @@ public class MainWindow implements Initializable {
             commentStage.setTitle("Update");
             commentStage.setScene(commentScene);
             commentStage.show();
-
-            viewOrderComments();
         } catch (Exception oucmicErr) {
             oucmicErr.printStackTrace();
         } finally {
@@ -312,13 +344,13 @@ public class MainWindow implements Initializable {
         databaseManager.openConnection();
 
         try {
+            deleteReplyLevelComments(cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue().getReplies());
             PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
                     "DELETE FROM comments WHERE comment_id = ?"
             );
             preparedStatement.setInt(1,
                     cartCommentSectionTreeView.getSelectionModel().getSelectedItem().getValue().getId());
             databaseManager.sendPreparedStatementQuery(preparedStatement);
-            viewOrderComments();
         } catch (Exception odcmicErr) {
             odcmicErr.printStackTrace();
         } finally {
@@ -331,14 +363,11 @@ public class MainWindow implements Initializable {
         databaseManager.openConnection();
 
         try {
-            cartCommentSectionTreeView.setRoot(new TreeItem<>());
-            cartCommentSectionTreeView.setShowRoot(false);
-            cartCommentSectionTreeView.getRoot().setExpanded(true);
-
             databaseManager.sendStatementQuery("SELECT * FROM comments WHERE product_id = '"
-                    + cartCartListView.getSelectionModel().getSelectedItem().getId() + "'");
+                    + cartCartListView.getSelectionModel().getSelectedItem().getId() + "' OR chat_id = 0");
 
             ResultSet resultSet = databaseManager.getResultSet();
+            ArrayList<Comment> comments = new ArrayList<>();
             while (resultSet.next()) {
                 Comment comment = new Comment(
                         resultSet.getInt("comment_id"),
@@ -349,11 +378,17 @@ public class MainWindow implements Initializable {
                         resultSet.getInt("rating"),
                         resultSet.getString("title"),
                         resultSet.getString("body"),
-                        null,
+                        new ArrayList<>(),
                         resultSet.getDate("date").toLocalDate()
                 );
-                cartCommentSectionTreeView.getRoot().getChildren().add(new TreeItem<>(comment));
+                comments.add(comment);
+
             }
+            cartCommentSectionTreeView.setRoot(new TreeItem<>());
+            cartCommentSectionTreeView.setShowRoot(false);
+            cartCommentSectionTreeView.getRoot().setExpanded(true);
+            comments = getTopLevelComments(comments);
+            comments.forEach(comment -> addTreeItem(comment, cartCommentSectionTreeView.getRoot()));
         } catch (Exception treeUpErr) {
             treeUpErr.printStackTrace();
         } finally {
@@ -404,7 +439,7 @@ public class MainWindow implements Initializable {
                         resultSet.getInt("rating"),
                         resultSet.getString("title"),
                         resultSet.getString("body"),
-                        new ArrayList<Comment>(),
+                        new ArrayList<>(),
                         resultSet.getDate("date").toLocalDate()
                 );
                 comments.add(comment);
@@ -448,6 +483,29 @@ public class MainWindow implements Initializable {
         }
     }
 
+    public void deleteReplyLevelComments(ArrayList<Comment> comments) {
+        for (Comment comment : comments) {
+            if (!comment.getReplies().isEmpty()) {
+                deleteReplyLevelComments(comment.getReplies());
+            } else {
+                DatabaseManager databaseManager = new DatabaseManager();
+                databaseManager.openConnection();
+
+                try {
+                    PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
+                            "DELETE FROM comments WHERE comment_id = ?"
+                    );
+                    preparedStatement.setInt(1, comment.getId());
+                    databaseManager.sendPreparedStatementQuery(preparedStatement);
+                } catch (Exception dcErr) {
+                    dcErr.printStackTrace();
+                } finally {
+                    databaseManager.closeConnection();
+                }
+            }
+        }
+    }
+
     public void addTreeItem(Comment comment, TreeItem<Comment> parentComment) {
         TreeItem<Comment> treeItem = new TreeItem<>(comment);
         parentComment.getChildren().add(treeItem);
@@ -459,7 +517,7 @@ public class MainWindow implements Initializable {
     public void addOrderComment() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
-            Parent parent = (Parent) fxmlLoader.load();
+            Parent parent = fxmlLoader.load();
             CommentWindow commentWindow = fxmlLoader.getController();
             commentWindow.initData(generalUser, cartOrdersListView.getSelectionModel().getSelectedItem());
             Scene commentScene = new Scene(parent);
@@ -467,8 +525,6 @@ public class MainWindow implements Initializable {
             commentStage.setTitle("Comment");
             commentStage.setScene(commentScene);
             commentStage.show();
-
-            viewOrderComments();
         } catch (Exception comErr) {
             comErr.printStackTrace();
         }
@@ -489,7 +545,6 @@ public class MainWindow implements Initializable {
                 preparedStatement.setInt(1, resultSet.getInt("cart_id"));
                 preparedStatement.setDate(2, Date.valueOf(LocalDate.now()));
             }
-            //else { saveCart(); }
 
             if (cartClientFirstNameTextField.getText().isEmpty() ||
                     cartClientLastNameTextField.getText().isEmpty() ||
@@ -537,8 +592,7 @@ public class MainWindow implements Initializable {
 
         try {
             PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(
-                    "REPLACE INTO addresses (first_name, last_name, primary_address, secondary_address," +
-                            "city, postal_code, birth_date) VALUES (?, ?, ?, ?, ?, ?, ?) WHERE user_id = ?"
+                    "REPLACE INTO addresses VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
             );
             preparedStatement.setInt(1, generalUser.getId());
             preparedStatement.setString(2, cartClientFirstNameTextField.getText());
@@ -548,6 +602,17 @@ public class MainWindow implements Initializable {
             preparedStatement.setString(6, cartCityTextField.getText());
             preparedStatement.setString(7, cartPostalCodeTextField.getText());
             preparedStatement.setDate(8, Date.valueOf(cartBirthDateDatePicker.getValue()));
+            databaseManager.sendPreparedStatementQuery(preparedStatement);
+
+            preparedStatement = databaseManager.getConnection().prepareStatement(
+                "REPLACE INTO cards VALUES (?, ?, ?, ?, ?, ?)"
+            );
+            preparedStatement.setInt(1, generalUser.getId());
+            preparedStatement.setString(2, cartCardFirstNameTextField.getText());
+            preparedStatement.setString(3, cartCardFirstNameTextField.getText());
+            preparedStatement.setString(4, cartCardLastNameTextField.getText());
+            preparedStatement.setString(5, cartCVCTextField.getText());
+            preparedStatement.setDate(6, Date.valueOf(cartExpirationDateDatePicker.getValue()));
             databaseManager.sendPreparedStatementQuery(preparedStatement);
         } catch (Exception riErr) {
             riErr.printStackTrace();
@@ -662,10 +727,9 @@ public class MainWindow implements Initializable {
     public void onAddReviewMenuItemClick() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("comment-window.fxml"));
-            Parent parent = (Parent) fxmlLoader.load();
+            Parent parent = fxmlLoader.load();
             CommentWindow commentWindow = fxmlLoader.getController();
             commentWindow.initData(generalUser, cartCartListView.getSelectionModel().getSelectedItem());
-            updateCommentTreeView();
             Scene commentScene = new Scene(parent);
             Stage commentStage = new Stage();
             commentStage.setTitle("Review");
@@ -677,7 +741,7 @@ public class MainWindow implements Initializable {
     }
 
     public void onAddToCartButtonClick() {
-        Product product = (Product) shopProductsListView.getSelectionModel().getSelectedItem();
+        Product product = shopProductsListView.getSelectionModel().getSelectedItem();
 
         if (!shopQuantityTextField.getText().trim().isEmpty() && Integer.parseInt(shopQuantityTextField.getText()) > 0
                 && product.getQuantity() >= Integer.parseInt(shopQuantityTextField.getText())) {
@@ -719,10 +783,6 @@ public class MainWindow implements Initializable {
             priceTotal += p.getPrice() * p.getQuantity();
         }
         cartTotalText.setText("Your total: " + priceTotal + "$");
-    }
-
-    public void updateCommentTreeView() {
-
     }
 
     // WAREHOUSE FUNCTIONS
