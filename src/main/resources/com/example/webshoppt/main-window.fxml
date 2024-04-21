@@ -169,7 +169,7 @@
                <content>
                   <AnchorPane fx:id="usersTabPane" minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="262.0">
                      <children>
-                        <TableView fx:id="usersTableView" editable="true" fixedCellSize="1.0" layoutX="14.0" layoutY="72.0" prefHeight="675.0" prefWidth="1106.0">
+                        <TableView fx:id="usersTableView" editable="true" layoutX="14.0" layoutY="72.0" prefHeight="675.0" prefWidth="1106.0">
                           <columns>
                             <TableColumn fx:id="usersIdTableColumn" prefWidth="78.0" text="Id" />
                             <TableColumn fx:id="usersEmailTableColumn" prefWidth="296.0" text="Email" />
