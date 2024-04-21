@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80c69551-48a8-4031-a496-e8abd95b5a81" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/webshopptdb.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/main-window.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/webshoppt/main-window.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,8 +83,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Karolis\Documents\Github\WebshopPT" />
       <recent name="C:\Users\Karka\Documents\GitHub\WebshopPT" />
+      <recent name="C:\Users\Karolis\Documents\Github\WebshopPT" />
       <recent name="C:\Users\Karolis\Documents\Github\WebshopPT\src\main\resources\com\example\webshoppt" />
       <recent name="C:\Users\Karolis\Documents\Github\WebshopPT\src\main\java\com\example\webshoppt" />
       <recent name="C:\Users\Karolis\Documents\Github\WebshopPT\src\main\resources" />
@@ -171,7 +171,7 @@
       <workItem from="1713630337940" duration="121000" />
       <workItem from="1713644034824" duration="4613000" />
       <workItem from="1713654188676" duration="2351000" />
-      <workItem from="1713720706771" duration="916000" />
+      <workItem from="1713720706771" duration="2080000" />
     </task>
     <servers />
   </component>
